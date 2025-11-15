@@ -19,6 +19,8 @@ interface FilterSidebarProps {
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects, searchTerm, setSearchTerm, instructorSearchTerm, setInstructorSearchTerm, crnSearchTerm, setCrnSearchTerm }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects(
       selectedSubjects.includes(subject)
@@ -28,72 +30,79 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
   };
   
   return (
-    <div className="bg-lehigh-brown/30 p-4 rounded-lg space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Courses</h3>
-        <input 
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="e.g., CSE 109, Programming..."
-          className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-        />
-      </div>
-       <div>
-        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Instructor</h3>
-        <input 
-          type="text"
-          value={instructorSearchTerm}
-          onChange={(e) => setInstructorSearchTerm(e.target.value)}
-          placeholder="e.g., Johnson"
-          className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-        />
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search by CRN</h3>
-        <input 
-          type="text"
-          value={crnSearchTerm}
-          onChange={(e) => setCrnSearchTerm(e.target.value)}
-          placeholder="e.g., 12345"
-          className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-        />
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Major</h3>
-        <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold">
-          <option value="All">All Majors</option>
-          {MAJORS.map(major => <option key={major.name} value={major.name}>{major.name}</option>)}
-        </select>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Subject</h3>
-        <div className="space-y-3">
-          <div className="grid grid-cols-3 gap-2">
-            {['Engineering', 'Math', 'Business'].map(subject => (
-              <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm">
-                <input 
-                  type="checkbox"
-                  checked={selectedSubjects.includes(subject)}
-                  onChange={() => handleSubjectChange(subject)}
-                  className="form-checkbox h-4 w-4 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
-                />
-                <span>{subject}</span>
-              </label>
-            ))}
+    <div className="bg-lehigh-brown/30 p-4 rounded-lg">
+      <button 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex justify-between items-center text-lg font-semibold text-lehigh-gold"
+        aria-expanded={isExpanded}
+        aria-controls="filter-panel"
+      >
+        <span>Filter & Search</span>
+        <svg 
+          className={`w-6 h-6 transition-transform duration-300 ${isExpanded ? 'transform rotate-180' : ''}`} 
+          fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+
+      <div
+        id="filter-panel"
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}
+      >
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Courses</h3>
+            <input 
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="e.g., CSE 109, Programming..."
+              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+            />
           </div>
-          <div className="space-y-2 pt-1">
-            {SUBJECTS.filter(s => !['Engineering', 'Math', 'Business'].includes(s)).map(subject => (
-              <label key={subject} className="flex items-center space-x-2 cursor-pointer">
-                <input 
-                  type="checkbox"
-                  checked={selectedSubjects.includes(subject)}
-                  onChange={() => handleSubjectChange(subject)}
-                  className="form-checkbox h-5 w-5 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
-                />
-                <span>{subject}</span>
-              </label>
-            ))}
+           <div>
+            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Instructor</h3>
+            <input 
+              type="text"
+              value={instructorSearchTerm}
+              onChange={(e) => setInstructorSearchTerm(e.target.value)}
+              placeholder="e.g., Johnson"
+              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+            />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search by CRN</h3>
+            <input 
+              type="text"
+              value={crnSearchTerm}
+              onChange={(e) => setCrnSearchTerm(e.target.value)}
+              placeholder="e.g., 12345"
+              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+            />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Major</h3>
+            <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold">
+              <option value="All">All Majors</option>
+              {MAJORS.map(major => <option key={major.name} value={major.name}>{major.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Subject</h3>
+            <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+              {SUBJECTS.map(subject => (
+                <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm">
+                  <input 
+                    type="checkbox"
+                    checked={selectedSubjects.includes(subject)}
+                    onChange={() => handleSubjectChange(subject)}
+                    className="form-checkbox h-4 w-4 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
+                  />
+                  <span>{subject}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       </div>
