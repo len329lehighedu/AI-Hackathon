@@ -4,12 +4,15 @@ import Header from './components/Header';
 import CourseCatalog from './components/CourseCatalog';
 import PlanAhead from './components/PlanAhead';
 import Evaluate from './components/Evaluate';
+import Login from './components/Login';
 import { Course, SemesterPlan } from './types';
 import { ALL_COURSES } from './constants';
 
 export type View = 'catalog' | 'planner' | 'evaluate';
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [currentView, setCurrentView] = useState<View>('catalog');
   const [courses, setCourses] = useState<Course[]>(ALL_COURSES);
   const [semesterPlan, setSemesterPlan] = useState<SemesterPlan>({
@@ -22,6 +25,17 @@ const App: React.FC = () => {
     'Fall 2028': [],
     'Spring 2029': [],
   });
+
+  const handleLogin = (email: string) => {
+    setUserEmail(email);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setUserEmail(null);
+    setIsAuthenticated(false);
+    setCurrentView('catalog'); // Reset to default view on logout
+  };
 
   const handleAddCourseToPlan = useCallback((course: Course, semester: string) => {
     setSemesterPlan(prevPlan => {
@@ -55,9 +69,13 @@ const App: React.FC = () => {
     });
   };
 
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <div className="bg-lehigh-dark-brown min-h-screen font-sans text-white">
-      <Header currentView={currentView} setCurrentView={setCurrentView} />
+      <Header currentView={currentView} setCurrentView={setCurrentView} userEmail={userEmail} onLogout={handleLogout} />
       <main className="p-4 sm:p-6 lg:p-8">
         {currentView === 'catalog' && <CourseCatalog courses={courses} onAddCourseToPlan={handleAddCourseToPlan} semesterPlan={semesterPlan} onAddReview={handleAddReview} />}
         {currentView === 'planner' && <PlanAhead semesterPlan={semesterPlan} onRemoveCourseFromPlan={handleRemoveCourseFromPlan} onAddCourseToPlan={handleAddCourseToPlan} allCourses={courses} />}
