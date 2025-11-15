@@ -135,15 +135,14 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
             <div>
                 <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Semester Breakdown</h3>
                 <div className="overflow-x-auto pb-4">
-                     <div className="grid grid-flow-col auto-cols-min sm:auto-cols-fr gap-4 min-w-[1200px] lg:min-w-full">
+                     <div className="grid grid-flow-col auto-cols-[14rem] sm:auto-cols-fr gap-4">
                         {Object.entries(semesterPlan).map(([semester, courses]) => (
-                            <div key={semester} className="w-64 sm:w-auto">
-                                <SemesterColumn
-                                    semester={semester}
-                                    courses={courses}
-                                    onRemoveCourseFromPlan={onRemoveCourseFromPlan}
-                                />
-                             </div>
+                            <SemesterColumn
+                                key={semester}
+                                semester={semester}
+                                courses={courses}
+                                onRemoveCourseFromPlan={onRemoveCourseFromPlan}
+                            />
                         ))}
                     </div>
                 </div>

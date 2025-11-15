@@ -141,31 +141,31 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
     if (selectedMajor !== 'All') {
       const major = MAJORS.find(m => m.name === selectedMajor);
       if (major) {
-        filtered = filtered.filter(c => major.requiredCourses.includes(c.id));
+        filtered = filtered.filter(c => c.id && major.requiredCourses?.includes(c.id));
       }
     }
 
     if (selectedSubjects.length > 0) {
-      filtered = filtered.filter(c => selectedSubjects.includes(c.subject));
+      filtered = filtered.filter(c => c.subject && selectedSubjects.includes(c.subject));
     }
 
     if (searchTerm.trim() !== '') {
       const lowercasedTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(c => 
-        c.id.toLowerCase().includes(lowercasedTerm) || 
-        c.title.toLowerCase().includes(lowercasedTerm)
+        c.id?.toLowerCase().includes(lowercasedTerm) || 
+        c.title?.toLowerCase().includes(lowercasedTerm)
       );
     }
     
     if (instructorSearchTerm.trim() !== '') {
         const lowercasedTerm = instructorSearchTerm.toLowerCase();
         filtered = filtered.filter(c => 
-            c.instructor.toLowerCase().includes(lowercasedTerm)
+            c.instructor?.toLowerCase().includes(lowercasedTerm)
         );
     }
     
     if (crnSearchTerm.trim() !== '') {
-        filtered = filtered.filter(c => c.crn.includes(crnSearchTerm.trim()));
+        filtered = filtered.filter(c => c.crn?.includes(crnSearchTerm.trim()));
     }
 
     return filtered;

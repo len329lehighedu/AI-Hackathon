@@ -36,9 +36,9 @@ const Evaluate: React.FC<EvaluateProps> = ({ courses, onAddReview }) => {
         if (searchTerm.trim().length < 2) return [];
         const lowercasedTerm = searchTerm.toLowerCase();
         return courses.filter(c =>
-            c.id.toLowerCase().includes(lowercasedTerm) ||
-            c.title.toLowerCase().includes(lowercasedTerm) ||
-            c.instructor.toLowerCase().includes(lowercasedTerm)
+            c.id?.toLowerCase().includes(lowercasedTerm) ||
+            c.title?.toLowerCase().includes(lowercasedTerm) ||
+            c.instructor?.toLowerCase().includes(lowercasedTerm)
         ).slice(0, 10); // Limit results for performance
     }, [courses, searchTerm]);
 

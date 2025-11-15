@@ -21,22 +21,35 @@ const COURSE_COLORS = [
 ];
 
 const parseTime = (timeStr: string) => {
-    const [daysStr, timeRange] = timeStr.split(' ');
-    const [startTimeStr, endTimeStr] = timeRange.split('-');
+    const parts = timeStr.split(' ');
+    if (parts.length < 2) {
+        return { days: [], startMinutes: 0, endMinutes: 0 };
+    }
+
+    const daysStr = parts[0];
+    const timeRange = parts.slice(1).join(' '); 
+    
+    const timeParts = timeRange.split('-').map(s => s.trim());
+    const startTimeStr = timeParts[0];
+    const endTimeStr = timeParts[1];
+
+    if (!startTimeStr || !endTimeStr) {
+        return { days: [], startMinutes: 0, endMinutes: 0 };
+    }
 
     const days = daysStr.match(/Th|M|T|W|F/g) || [];
 
     const parseTime12hr = (t: string) => {
         const isPM = t.includes('PM');
-        const [hour, minute] = t.replace(/AM|PM/, '').split(':').map(Number);
+        const [hour, minute] = t.replace(/AM|PM/, '').trim().split(':').map(Number);
         let finalHour = hour;
         if (isPM && hour < 12) {
             finalHour += 12;
         }
-        if (!isPM && hour === 12) { // 12 AM
+        if (!isPM && hour === 12) { // 12 AM (midnight)
             finalHour = 0;
         }
-        return finalHour * 60 + minute;
+        return finalHour * 60 + (minute || 0);
     };
 
     const startMinutes = parseTime12hr(startTimeStr);
