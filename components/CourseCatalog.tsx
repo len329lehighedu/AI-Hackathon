@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Course, Major, SemesterPlan, Subject } from '../types';
 import { MAJORS, SUBJECTS } from '../constants';
@@ -13,9 +14,11 @@ interface FilterSidebarProps {
   setSearchTerm: (term: string) => void;
   instructorSearchTerm: string;
   setInstructorSearchTerm: (term: string) => void;
+  crnSearchTerm: string;
+  setCrnSearchTerm: (term: string) => void;
 }
 
-const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects, searchTerm, setSearchTerm, instructorSearchTerm, setInstructorSearchTerm }) => {
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects, searchTerm, setSearchTerm, instructorSearchTerm, setInstructorSearchTerm, crnSearchTerm, setCrnSearchTerm }) => {
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects(
       selectedSubjects.includes(subject)
@@ -47,6 +50,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
         />
       </div>
       <div>
+        <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search by CRN</h3>
+        <input 
+          type="text"
+          value={crnSearchTerm}
+          onChange={(e) => setCrnSearchTerm(e.target.value)}
+          placeholder="e.g., 12345"
+          className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+        />
+      </div>
+      <div>
         <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Major</h3>
         <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold">
           <option value="All">All Majors</option>
@@ -55,8 +68,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
       </div>
       <div>
         <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Subject</h3>
-        <div className="grid grid-cols-3 gap-2">
-            {SUBJECTS.map(subject => (
+        <div className="space-y-3">
+          <div className="grid grid-cols-3 gap-2">
+            {['Engineering', 'Math', 'Business'].map(subject => (
               <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm">
                 <input 
                   type="checkbox"
@@ -67,6 +81,20 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
                 <span>{subject}</span>
               </label>
             ))}
+          </div>
+          <div className="space-y-2 pt-1">
+            {SUBJECTS.filter(s => !['Engineering', 'Math', 'Business'].includes(s)).map(subject => (
+              <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="checkbox"
+                  checked={selectedSubjects.includes(subject)}
+                  onChange={() => handleSubjectChange(subject)}
+                  className="form-checkbox h-5 w-5 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
+                />
+                <span>{subject}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -78,7 +106,7 @@ interface CourseCatalogProps {
   courses: Course[];
   onAddCourseToPlan: (course: Course, semester: string) => void;
   semesterPlan: SemesterPlan;
-  onAddReview: (courseId: string, review: { rating: number; comment: string; author: string; date: string }) => void;
+  onAddReview: (courseId: string, review: { rating: number; comment:string; author: string; date: string }) => void;
 }
 
 const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPlan, semesterPlan, onAddReview }) => {
@@ -86,6 +114,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [instructorSearchTerm, setInstructorSearchTerm] = useState('');
+  const [crnSearchTerm, setCrnSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const filteredCourses = useMemo(() => {
@@ -117,8 +146,12 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
         );
     }
     
+    if (crnSearchTerm.trim() !== '') {
+        filtered = filtered.filter(c => c.crn.includes(crnSearchTerm.trim()));
+    }
+
     return filtered;
-  }, [courses, selectedMajor, selectedSubjects, searchTerm, instructorSearchTerm]);
+  }, [courses, selectedMajor, selectedSubjects, searchTerm, instructorSearchTerm, crnSearchTerm]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -132,6 +165,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
             setSearchTerm={setSearchTerm}
             instructorSearchTerm={instructorSearchTerm}
             setInstructorSearchTerm={setInstructorSearchTerm}
+            crnSearchTerm={crnSearchTerm}
+            setCrnSearchTerm={setCrnSearchTerm}
         />
       </div>
       <div className="lg:col-span-3">
@@ -141,7 +176,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
               <CourseCard 
                 key={course.id} 
                 course={course} 
-                onViewReviews={() => setSelectedCourse(course)}
+                onViewDetails={() => setSelectedCourse(course)}
                 onAddCourseToPlan={onAddCourseToPlan}
                 semesterPlan={semesterPlan}
               />

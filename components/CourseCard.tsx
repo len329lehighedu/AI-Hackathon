@@ -4,12 +4,12 @@ import { Course, SemesterPlan } from '../types';
 
 interface CourseCardProps {
   course: Course;
-  onViewReviews: () => void;
+  onViewDetails: () => void;
   onAddCourseToPlan: (course: Course, semester: string) => void;
   semesterPlan: SemesterPlan;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onViewReviews, onAddCourseToPlan, semesterPlan }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCourseToPlan, semesterPlan }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleAddToPlan = (semester: string) => {
@@ -41,10 +41,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewReviews, onAddCou
       </div>
       <div className="bg-gray-50 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
         <button 
-          onClick={onViewReviews}
+          onClick={onViewDetails}
           className="w-full sm:w-auto text-center px-4 py-2 bg-lehigh-dark-brown text-white text-sm font-semibold rounded-md hover:bg-lehigh-brown transition-colors duration-200"
         >
-          {course.reviews.length > 0 ? `View Reviews (${course.reviews.length})` : 'No Reviews Yet'}
+          View Details
         </button>
         <div className="relative w-full sm:w-auto">
           <button 
