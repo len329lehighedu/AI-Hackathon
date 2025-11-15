@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Course, Major, SemesterPlan, Subject } from '../types';
 import { MAJORS, SUBJECTS } from '../constants';
@@ -56,18 +55,33 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
       </div>
       <div>
         <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Subject</h3>
-        <div className="space-y-2">
-          {SUBJECTS.map(subject => (
-            <label key={subject} className="flex items-center space-x-2 cursor-pointer">
-              <input 
-                type="checkbox"
-                checked={selectedSubjects.includes(subject)}
-                onChange={() => handleSubjectChange(subject)}
-                className="form-checkbox h-5 w-5 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
-              />
-              <span>{subject}</span>
-            </label>
-          ))}
+        <div className="space-y-3">
+          <div className="grid grid-cols-3 gap-2">
+            {['Engineering', 'Math', 'Business'].map(subject => (
+              <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm">
+                <input 
+                  type="checkbox"
+                  checked={selectedSubjects.includes(subject)}
+                  onChange={() => handleSubjectChange(subject)}
+                  className="form-checkbox h-4 w-4 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
+                />
+                <span>{subject}</span>
+              </label>
+            ))}
+          </div>
+          <div className="space-y-2 pt-1">
+            {SUBJECTS.filter(s => !['Engineering', 'Math', 'Business'].includes(s)).map(subject => (
+              <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="checkbox"
+                  checked={selectedSubjects.includes(subject)}
+                  onChange={() => handleSubjectChange(subject)}
+                  className="form-checkbox h-5 w-5 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
+                />
+                <span>{subject}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
     </div>
