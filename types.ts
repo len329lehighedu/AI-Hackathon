@@ -14,6 +14,8 @@ export interface Section {
   time: string; // e.g., "MWF 10:10 AM - 11:00 AM"
   location: string;
   instructor: string;
+  enrolled: number;
+  capacity: number;
 }
 
 export interface Material {

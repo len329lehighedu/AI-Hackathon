@@ -9,17 +9,22 @@ interface PlannedCourseCardProps {
     course: Course;
     semester: string;
     onRemove: (courseId: string, semester: string) => void;
+    isConflicting?: boolean;
+    conflictText?: string;
 }
 
-const PlannedCourseCard: React.FC<PlannedCourseCardProps> = ({ course, semester, onRemove }) => (
-    <div className="bg-white p-3 rounded-lg shadow flex justify-between items-center text-lehigh-dark-brown select-none">
+const PlannedCourseCard: React.FC<PlannedCourseCardProps> = ({ course, semester, onRemove, isConflicting, conflictText }) => (
+    <div className={`bg-white p-3 rounded-lg shadow flex justify-between items-center text-lehigh-dark-brown select-none transition-all duration-300 ${isConflicting ? 'border-2 border-lehigh-red' : ''}`} title={conflictText}>
         <div>
             <p className="font-bold">{course.id}</p>
             <p className="text-sm text-gray-600">{course.title}</p>
         </div>
-        <button onClick={() => onRemove(course.id, semester)} className="text-lehigh-red hover:text-red-700 font-bold text-xl" aria-label={`Remove ${course.title} from plan`}>
-            &times;
-        </button>
+        <div className="flex items-center space-x-2">
+            {isConflicting && <span className="text-lehigh-red text-xl font-bold" title={conflictText}>!</span>}
+            <button onClick={() => onRemove(course.id, semester)} className="text-lehigh-red hover:text-red-700 font-bold text-xl" aria-label={`Remove ${course.title} from plan`}>
+                &times;
+            </button>
+        </div>
     </div>
 );
 
@@ -28,24 +33,36 @@ interface SemesterColumnProps {
     semester: string;
     courses: Course[];
     onRemoveCourseFromPlan: (courseId: string, semester: string) => void;
+    conflicts?: Map<string, string[]>;
 }
 
-const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRemoveCourseFromPlan }) => {
+const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRemoveCourseFromPlan, conflicts }) => {
     const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
 
     return (
         <div className="bg-lehigh-darker-brown rounded-lg p-4 flex flex-col h-full">
-            <h3 className="text-lg font-bold text-lehigh-gold mb-3 text-center">{semester}</h3>
+            <h3 className="text-lg font-bold text-lehigh-gold mb-3 text-center flex items-center justify-center">
+                {semester}
+                {conflicts && conflicts.size > 0 && <span className="ml-2 text-red-400" title="Time conflict detected!">⚠️</span>}
+            </h3>
             <div className="space-y-3 flex-grow overflow-y-auto pr-1">
                 {courses.length > 0 ? (
-                    courses.map(course => (
-                        <PlannedCourseCard
-                            key={course.id}
-                            course={course}
-                            semester={semester}
-                            onRemove={onRemoveCourseFromPlan}
-                        />
-                    ))
+                    courses.map(course => {
+                        const conflictWith = conflicts?.get(course.id);
+                        const isConflicting = !!conflictWith && conflictWith.length > 0;
+                        const conflictText = isConflicting ? `Conflicts with: ${conflictWith.join(', ')}` : undefined;
+
+                        return (
+                            <PlannedCourseCard
+                                key={course.id}
+                                course={course}
+                                semester={semester}
+                                onRemove={onRemoveCourseFromPlan}
+                                isConflicting={isConflicting}
+                                conflictText={conflictText}
+                            />
+                        )
+                    })
                 ) : (
                     <p className="text-center text-sm text-lehigh-light-gold/70 pt-4">No courses planned.</p>
                 )}
@@ -94,6 +111,26 @@ const MajorRequirements: React.FC<MajorRequirementsProps> = ({ selectedMajor, pl
 };
 
 
+const parseTime = (timeStr: string) => {
+    const parts = timeStr.split(' ');
+    if (parts.length < 2) return { days: [], startMinutes: 0, endMinutes: 0 };
+    const daysStr = parts[0];
+    const timeRange = parts.slice(1).join(' ');
+    const timeParts = timeRange.split('-').map(s => s.trim());
+    const [startTimeStr, endTimeStr] = timeParts;
+    if (!startTimeStr || !endTimeStr) return { days: [], startMinutes: 0, endMinutes: 0 };
+    const days = daysStr.match(/Su|Sa|Th|M|T|W|F/g) || [];
+    const parseTime12hr = (t: string) => {
+        const isPM = t.toUpperCase().includes('PM');
+        const [hour, minute] = t.replace(/AM|PM/i, '').trim().split(':').map(Number);
+        let finalHour = hour;
+        if (isPM && hour < 12) finalHour += 12;
+        if (!isPM && hour === 12) finalHour = 0;
+        return finalHour * 60 + (minute || 0);
+    };
+    return { days, startMinutes: parseTime12hr(startTimeStr), endMinutes: parseTime12hr(endTimeStr) };
+};
+
 interface PlanAheadProps {
     semesterPlan: SemesterPlan;
     onRemoveCourseFromPlan: (courseId: string, semester: string) => void;
@@ -108,10 +145,75 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
     const plannedCourses = useMemo(() => Object.values(semesterPlan).flat(), [semesterPlan]);
     const selectedMajor = useMemo(() => MAJORS.find(m => m.name === selectedMajorName) || null, [selectedMajorName]);
     const coursesForVisualizer = useMemo(() => semesterPlan[selectedSemesterTab] || [], [semesterPlan, selectedSemesterTab]);
+
+    const conflictsBySemester = useMemo(() => {
+        const conflictsMap = new Map<string, Map<string, string[]>>(); // semester -> { courseId -> [conflictingCourseIds] }
+        Object.entries(semesterPlan).forEach(([semester, courses]) => {
+            const semesterConflicts = new Map<string, string[]>();
+            for (let i = 0; i < courses.length; i++) {
+                for (let j = i + 1; j < courses.length; j++) {
+                    const courseA = courses[i];
+                    const courseB = courses[j];
+                    for (const secA of courseA.sections) {
+                        const timeA = parseTime(secA.time);
+                        if (timeA.days.length === 0) continue;
+                        for (const secB of courseB.sections) {
+                            const timeB = parseTime(secB.time);
+                            if (timeB.days.length === 0) continue;
+
+                            const daysOverlap = timeA.days.some(day => timeB.days.includes(day));
+                            const timesOverlap = timeA.startMinutes < timeB.endMinutes && timeB.startMinutes < timeA.endMinutes;
+                            
+                            if (daysOverlap && timesOverlap) {
+                                const conflictsOfA = semesterConflicts.get(courseA.id) || [];
+                                if (!conflictsOfA.includes(courseB.id)) conflictsOfA.push(courseB.id);
+                                semesterConflicts.set(courseA.id, conflictsOfA);
+
+                                const conflictsOfB = semesterConflicts.get(courseB.id) || [];
+                                if (!conflictsOfB.includes(courseA.id)) conflictsOfB.push(courseA.id);
+                                semesterConflicts.set(courseB.id, conflictsOfB);
+                            }
+                        }
+                    }
+                }
+            }
+            if (semesterConflicts.size > 0) {
+                conflictsMap.set(semester, semesterConflicts);
+            }
+        });
+        return conflictsMap;
+    }, [semesterPlan]);
+    
+    const handleExportCSV = () => {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Semester,Course ID,Title,Credits,Instructor,Sections\r\n";
+
+        Object.entries(semesterPlan).forEach(([semester, courses]) => {
+            courses.forEach(course => {
+                const sections = course.sections.map(s => `${s.type} ${s.time} @ ${s.location}`).join('; ');
+                const row = [semester, course.id, `"${course.title.replace(/"/g, '""')}"`, course.credits, `"${course.instructor.replace(/"/g, '""')}"`, `"${sections.replace(/"/g, '""')}"`].join(',');
+                csvContent += row + "\r\n";
+            });
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "lehigh_semester_plan.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
     
     return (
         <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-lehigh-gold text-center">Plan Your Academic Journey</h2>
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <h2 className="text-3xl font-bold text-lehigh-gold text-center">Plan Your Academic Journey</h2>
+                <button onClick={handleExportCSV} className="px-4 py-2 bg-lehigh-green text-white text-sm font-semibold rounded-md hover:bg-green-700 transition-colors duration-200">
+                    Export as CSV
+                </button>
+            </div>
+
 
             <div className="max-w-4xl mx-auto space-y-4">
                  <div>
@@ -159,6 +261,7 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
                                 semester={semester}
                                 courses={courses}
                                 onRemoveCourseFromPlan={onRemoveCourseFromPlan}
+                                conflicts={conflictsBySemester.get(semester)}
                             />
                         ))}
                     </div>

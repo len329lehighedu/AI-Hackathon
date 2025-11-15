@@ -147,6 +147,13 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
                               <p className="text-sm">{sec.time}</p>
                               <p className="text-sm">{sec.location}</p>
                               <p className="text-sm">Instructor: {sec.instructor}</p>
+                              <p className="text-sm font-medium text-white flex items-center">
+                                  Enrollment: {sec.enrolled} / {sec.capacity}
+                                  <span 
+                                    className={`ml-2 inline-block h-3 w-3 rounded-full ${sec.enrolled >= sec.capacity ? 'bg-red-500' : (sec.enrolled / sec.capacity > 0.85 ? 'bg-yellow-400' : 'bg-green-500')}`}
+                                    title={sec.enrolled >= sec.capacity ? 'Full' : (sec.enrolled / sec.capacity > 0.85 ? 'Nearly Full' : 'Open')}
+                                  ></span>
+                              </p>
                             </div>
                           ))}
                         </div>

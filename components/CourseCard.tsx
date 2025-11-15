@@ -24,6 +24,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCou
   
   const currentSemester = getCourseSemester();
 
+  const totalEnrolled = course.sections.reduce((sum, sec) => sum + sec.enrolled, 0);
+  const totalCapacity = course.sections.reduce((sum, sec) => sum + sec.capacity, 0);
+  const occupancy = totalCapacity > 0 ? totalEnrolled / totalCapacity : 0;
+  
+  const occupancyColor = occupancy >= 1 ? 'text-lehigh-red' : occupancy > 0.85 ? 'text-yellow-600' : 'text-green-600';
+
   return (
     <div className="bg-white text-lehigh-dark-brown rounded-lg shadow-lg flex flex-col transition-transform transform hover:scale-105 duration-300 select-none">
       <div className="p-5 flex-grow">
@@ -33,6 +39,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCou
         </div>
         <p className="text-sm text-lehigh-brown mt-1">{course.subject}</p>
         <p className="text-sm text-gray-700 mt-2">Instructor: {course.instructor}</p>
+        <p className={`text-sm font-semibold ${occupancyColor} mt-1`}>Seats: {totalEnrolled} / {totalCapacity}</p>
         <p className="text-gray-600 mt-2 text-sm flex-grow">{course.description}</p>
       </div>
       <div className="bg-gray-50 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
