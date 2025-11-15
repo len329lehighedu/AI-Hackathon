@@ -3,10 +3,11 @@ import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import CourseCatalog from './components/CourseCatalog';
 import PlanAhead from './components/PlanAhead';
+import ProfessorEvaluation from './components/ProfessorEvaluation';
 import { Course, SemesterPlan } from './types';
 import { ALL_COURSES } from './constants';
 
-export type View = 'catalog' | 'planner';
+export type View = 'catalog' | 'planner' | 'evaluation';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('catalog');
@@ -59,7 +60,8 @@ const App: React.FC = () => {
       <Header currentView={currentView} setCurrentView={setCurrentView} />
       <main className="p-4 sm:p-6 lg:p-8">
         {currentView === 'catalog' && <CourseCatalog courses={courses} onAddCourseToPlan={handleAddCourseToPlan} semesterPlan={semesterPlan} onAddReview={handleAddReview} />}
-        {currentView === 'planner' && <PlanAhead semesterPlan={semesterPlan} onRemoveCourseFromPlan={handleRemoveCourseFromPlan} />}
+        {currentView === 'planner' && <PlanAhead semesterPlan={semesterPlan} onRemoveCourseFromPlan={handleRemoveCourseFromPlan} allCourses={courses} onAddCourseToPlan={handleAddCourseToPlan} />}
+        {currentView === 'evaluation' && <ProfessorEvaluation />}
       </main>
     </div>
   );
