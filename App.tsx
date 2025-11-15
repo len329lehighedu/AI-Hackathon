@@ -8,7 +8,7 @@ import Login from './components/Login';
 import { Course, SemesterPlan } from './types';
 import { ALL_COURSES } from './constants';
 
-export type View = 'catalog' | 'planner' | 'evaluate';
+export type View = 'catalog' | 'planner' | 'feedback';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,7 +79,7 @@ const App: React.FC = () => {
       <main className="p-4 sm:p-6 lg:p-8">
         {currentView === 'catalog' && <CourseCatalog courses={courses} onAddCourseToPlan={handleAddCourseToPlan} semesterPlan={semesterPlan} onAddReview={handleAddReview} />}
         {currentView === 'planner' && <PlanAhead semesterPlan={semesterPlan} onRemoveCourseFromPlan={handleRemoveCourseFromPlan} onAddCourseToPlan={handleAddCourseToPlan} allCourses={courses} />}
-        {currentView === 'evaluate' && <Evaluate courses={courses} onAddReview={handleAddReview} />}
+        {currentView === 'feedback' && <Evaluate courses={courses} onAddReview={handleAddReview} />}
       </main>
     </div>
   );

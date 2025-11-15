@@ -36,10 +36,10 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, userEmail,
               Plan Ahead
             </button>
             <button
-              onClick={() => setCurrentView('evaluate')}
-              className={`${navItemClasses} ${currentView === 'evaluate' ? activeClasses : inactiveClasses}`}
+              onClick={() => setCurrentView('feedback')}
+              className={`${navItemClasses} ${currentView === 'feedback' ? activeClasses : inactiveClasses}`}
             >
-              Evaluate
+              Feedback
             </button>
           </nav>
           <div className="flex items-center space-x-4">

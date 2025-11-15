@@ -5,7 +5,7 @@ export const MAJORS: Major[] = [
   { name: 'Mechanical Engineering (BS)', requiredCourses: ['PHY 011', 'MATH 205', 'MECH 003', 'MECH 225', 'MECH 240'] },
   { name: 'English (BA)', requiredCourses: ['WRT 001', 'ENGL 111', 'ENGL 125'] },
   { name: 'Finance (BS)', requiredCourses: ['ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111'] },
-  { name: 'Computer Science and Business (BS)', requiredCourses: ['CSE 007', 'CSE 017', 'CSE 109', 'ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111', 'MATH 205'] }
+  { name: 'Computer Science and Business (BS)', requiredCourses: ['CSE 007', 'CSE 017', 'CSE 109', 'ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111', 'MATH 205', 'BUS 001', 'ECO 045', 'CSE 140', 'CSE 202', 'CSE 216', 'MGT 043', 'CSE 347', 'MGT 301'] }
 ];
 
 export const SUBJECTS: Subject[] = ['Engineering', 'Humanities', 'Math', 'Natural Science', 'Social Science',"Business"];
@@ -181,7 +181,7 @@ export const ALL_COURSES: Course[] = [
       sections: [
         { id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Rauch Business Ctr 120', instructor: 'Prof. Michael Chen' }
       ],
-      prerequisites: ['ECO 001'], materials: []
+      prerequisites: [], materials: []
     },
     {
       id: 'ACCT 152', crn: '50102', title: 'Introduction to Managerial Accounting',
@@ -250,5 +250,440 @@ export const ALL_COURSES: Course[] = [
         { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Rauch Business Ctr 171', instructor: 'Prof. Maria Hernandez' }
       ],
       prerequisites: ['FIN 125', 'MKT 111'], materials: []
+    },
+    // CSB Additions Start Here
+    {
+      id: 'BUS 001',
+      crn: '50601',
+      title: 'Foundations of Business',
+      instructor: 'Prof. Laura Richmond',
+      description: 'An introductory course covering the fundamental concepts of business, including management, marketing, finance, accounting, and operations in a global context.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Rauch Business Ctr 101', instructor: 'Prof. Laura Richmond' }
+      ],
+      prerequisites: [], 
+      materials: []
+    },
+    {
+      id: 'ECO 045',
+      crn: '45679',
+      title: 'Statistical Methods',
+      instructor: 'Dr. Ken Chow',
+      description: 'Covers the basic concepts of probability and statistics, including data analysis, estimation, hypothesis testing, and regression. Emphasis on applications in economics and business.',
+      credits: 3,
+      subject: 'Social Science',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 9:10 AM - 10:00 AM', location: 'Rauch Business Ctr 085', instructor: 'Dr. Ken Chow' }
+      ],
+      prerequisites: ['ECO 001'], 
+      materials: []
+    },
+    {
+      id: 'CSE 347',
+      crn: '12355',
+      title: 'Software and Systems for E-Commerce',
+      instructor: 'Prof. Mark Erle',
+      description: 'CSB Capstone. Design and implementation of significant e-commerce systems. Integrates business and technology concepts in a team project environment.',
+      credits: 3,
+      subject: 'Engineering',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Packard Lab 466', instructor: 'Prof. Mark Erle' }
+      ],
+      prerequisites: ['CSE 216'], 
+      materials: []
+    },
+    {
+      id: 'MKT 312',
+      crn: '50202',
+      title: 'Marketing Research',
+      instructor: 'Prof. Sarah Daniels',
+      description: 'Methods and principles of marketing research. Problem definition, research design, data collection techniques, and analysis for marketing decision making.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MW 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 120', instructor: 'Prof. Sarah Daniels' }
+      ],
+      prerequisites: ['MKT 111', 'ECO 045'], 
+      materials: []
+    },
+    {
+      id: 'MKT 313',
+      crn: '50203',
+      title: 'Consumer Behavior',
+      instructor: 'Prof. David Clark',
+      description: 'An interdisciplinary study of consumer decision-making processes and the factors that influence them, including psychological, sociological, and cultural aspects.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Rauch Business Ctr 085', instructor: 'Prof. David Clark' }
+      ],
+      prerequisites: ['MKT 111'], 
+      materials: []
+    },
+     {
+      id: 'MKT 327',
+      crn: '50204',
+      title: 'Digital & Social Media Marketing',
+      instructor: 'Prof. Jennifer Allen',
+      description: 'Examines strategies and tactics for using digital and social media channels to achieve marketing objectives. Topics include SEO, content marketing, and analytics.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 11:10 AM - 12:00 PM', location: 'Rauch Business Ctr 141', instructor: 'Prof. Jennifer Allen' }
+      ],
+      prerequisites: ['MKT 111'], 
+      materials: []
+    },
+    {
+      id: 'FIN 226',
+      crn: '45680',
+      title: 'Investments',
+      instructor: 'Dr. Paul Grayson',
+      description: 'Study of investment environments and processes. Topics include security markets, investment analysis, portfolio theory, and asset pricing models.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Rauch Business Ctr 091', instructor: 'Dr. Paul Grayson' }
+      ],
+      prerequisites: ['FIN 125'], 
+      materials: []
+    },
+    {
+      id: 'FIN 230',
+      crn: '45681',
+      title: 'Corporate Finance',
+      instructor: 'Dr. Patricia Taylor',
+      description: 'In-depth analysis of corporate financial decisions, including capital budgeting, capital structure, dividend policy, and corporate valuation.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Rauch Business Ctr 091', instructor: 'Dr. Patricia Taylor' }
+      ],
+      prerequisites: ['FIN 125'], 
+      materials: []
+    },
+    {
+      id: 'FIN 328',
+      crn: '45682',
+      title: 'Derivatives & Risk Management',
+      instructor: 'Dr. Paul Grayson',
+      description: 'Introduction to financial derivative securities such as options, futures, and swaps, and their application in managing financial risk.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 122', instructor: 'Dr. Paul Grayson' }
+      ],
+      prerequisites: ['FIN 226'], 
+      materials: []
+    },
+    {
+      id: 'CSE 241',
+      crn: '12356',
+      title: 'Database Systems',
+      instructor: 'Prof. Brian Davison',
+      description: 'Design and implementation of database systems. Topics include relational models, SQL, database design theory, and transaction management.',
+      credits: 3,
+      subject: 'Engineering',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MW 4:25 PM - 5:40 PM', location: 'Packard Lab 101', instructor: 'Prof. Brian Davison' }
+      ],
+      prerequisites: ['CSE 109'], 
+      materials: []
+    },
+     {
+      id: 'CSE 318',
+      crn: '12357',
+      title: 'Theory of Computation',
+      instructor: 'Prof. Hector Munoz-Avila',
+      description: 'Introduction to formal languages, automata, and computability. Explores the fundamental capabilities and limitations of computation.',
+      credits: 3,
+      subject: 'Engineering',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Lewis Lab 316', instructor: 'Prof. Hector Munoz-Avila' }
+      ],
+      prerequisites: ['CSE 140'], 
+      materials: []
+    },
+    {
+      id: 'CSE 326',
+      crn: '12358',
+      title: 'Web Systems Programming',
+      instructor: 'Prof. Michael Spear',
+      description: 'Programming for web-based applications. Covers both client-side and server-side technologies for developing dynamic, data-driven web sites.',
+      credits: 3,
+      subject: 'Engineering',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 2:10 PM - 3:00 PM', location: 'Packard Lab 212', instructor: 'Prof. Michael Spear' }
+      ],
+      prerequisites: ['CSE 109'], 
+      materials: []
+    },
+    {
+      id: 'ACCT 311',
+      crn: '50103',
+      title: 'Intermediate Accounting I',
+      instructor: 'Prof. Michael Chen',
+      description: 'In-depth study of financial accounting theory and practice, focusing on the preparation and analysis of financial statements.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Rauch Business Ctr 120', instructor: 'Prof. Michael Chen' }
+      ],
+      prerequisites: ['ACCT 152'], 
+      materials: []
+    },
+    {
+      id: 'ACCT 321',
+      crn: '50104',
+      title: 'Cost Accounting',
+      instructor: 'Dr. Linda White',
+      description: 'Study of cost accumulation, allocation, and control systems for managerial planning and decision making.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 10:10 AM - 11:00 AM', location: 'Rauch Business Ctr 122', instructor: 'Dr. Linda White' }
+      ],
+      prerequisites: ['ACCT 152'], 
+      materials: []
+    },
+    {
+      id: 'MGT 243',
+      crn: '50303',
+      title: 'Human Resource Management',
+      instructor: 'Dr. Susan Adams',
+      description: 'Examines the policies and practices of managing human resources, including recruitment, training, compensation, and employee relations.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Rauch Business Ctr 111', instructor: 'Dr. Susan Adams' }
+      ],
+      prerequisites: ['MGT 043'], 
+      materials: []
+    },
+    {
+      id: 'MGT 311',
+      crn: '50304',
+      title: 'Negotiation and Conflict Resolution',
+      instructor: 'Dr. Naomi Rothman',
+      description: 'Develops skills in negotiation and conflict management through theory, practice, and self-reflection.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MW 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 171', instructor: 'Dr. Naomi Rothman' }
+      ],
+      prerequisites: [], 
+      materials: []
+    },
+    {
+      id: 'SCM 309',
+      crn: '50502',
+      title: 'Supply Chain Modeling and Analysis',
+      instructor: 'Dr. Robert Garcia',
+      description: 'Application of quantitative models and analytical tools to solve problems in supply chain and logistics management.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Rauch Business Ctr 091', instructor: 'Dr. Robert Garcia' }
+      ],
+      prerequisites: ['SCM 186'], 
+      materials: []
+    },
+    {
+      id: 'SCM 320',
+      crn: '50503',
+      title: 'Transportation and Logistics Management',
+      instructor: 'Dr. Zach Zacharia',
+      description: 'Examines the role of transportation and logistics in the supply chain, covering modes of transport, network design, and global logistics.',
+      credits: 3,
+      subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Rauch Business Ctr 143', instructor: 'Dr. Zach Zacharia' }
+      ],
+      prerequisites: ['SCM 186'], 
+      materials: []
+    },
+    // More Diverse Courses Start Here
+    {
+        id: 'MECH 003', crn: '61001', title: 'Intro to Mechanical Engineering',
+        instructor: 'Prof. James Wilson',
+        description: 'Introduction to mechanical engineering through hands-on projects and case studies. Covers topics like design, thermodynamics, and materials.',
+        credits: 3, subject: 'Engineering',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Packard Lab 360', instructor: 'Prof. James Wilson' }],
+        prerequisites: ['PHY 011'], materials: []
+    },
+    {
+        id: 'ECE 081', crn: '61002', title: 'Fundamentals of Electrical and Computer Engineering',
+        instructor: 'Dr. Rosa Diaz',
+        description: 'An introduction to the fundamental concepts in electrical and computer engineering, including circuits, signals, and logic design.',
+        credits: 4, subject: 'Engineering',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Packard Lab 101', instructor: 'Dr. Rosa Diaz' }],
+        prerequisites: ['MATH 022'], materials: []
+    },
+    {
+        id: 'CHE 031', crn: '61003', title: 'Introduction to Chemical Engineering',
+        instructor: 'Prof. Raymond Holt',
+        description: 'Introduction to the chemical engineering profession. Material and energy balances on chemical processes. Introduction to thermodynamics of single component systems.',
+        credits: 3, subject: 'Engineering',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Iacocca Hall B023', instructor: 'Prof. Raymond Holt' }],
+        prerequisites: ['CHM 030'], materials: []
+    },
+    {
+        id: 'MAT 021', crn: '61004', title: 'Materials Science and Engineering',
+        instructor: 'Dr. Amy Santiago',
+        description: 'Structure, properties, processing, and performance of engineering materials including metals, ceramics, polymers, and composites.',
+        credits: 3, subject: 'Engineering',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 10:10 AM - 11:00 AM', location: 'Whitaker Lab 303', instructor: 'Dr. Amy Santiago' }],
+        prerequisites: ['CHM 030'], materials: []
+    },
+    {
+        id: 'BIOS 041', crn: '62001', title: 'Introduction to Cellular and Molecular Biology',
+        instructor: 'Prof. Terry Jeffords',
+        description: 'Fundamental concepts of biology, including cell structure and function, genetics, and molecular biology. With required lab.',
+        credits: 4, subject: 'Natural Science',
+        reviews: [], sections: [
+            { id: '10', type: 'Lecture', time: 'MWF 9:10 AM - 10:00 AM', location: 'Mudd Building 017', instructor: 'Prof. Terry Jeffords' },
+            { id: '11L', type: 'Lab', time: 'T 1:35 PM - 4:25 PM', location: 'Iacocca Hall D301', instructor: 'TA' },
+        ],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'CHM 030', crn: '62002', title: 'Introduction to Chemical Principles',
+        instructor: 'Dr. Charles Boyle',
+        description: 'Introduction to modern chemical principles for science and engineering majors. Stoichiometry, atomic and molecular structure, thermodynamics, and kinetics.',
+        credits: 4, subject: 'Natural Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Seeley G. Mudd 017', instructor: 'Dr. Charles Boyle' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'PHY 011', crn: '62003', title: 'Introductory Physics I',
+        instructor: 'Prof. Gina Linetti',
+        description: 'Mechanics, heat, and sound. Principles of classical mechanics, including kinematics, Newton’s laws, work and energy, momentum, rotational motion, and oscillations.',
+        credits: 4, subject: 'Natural Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 2:10 PM - 3:00 PM', location: 'Lewis Lab 316', instructor: 'Prof. Gina Linetti' }],
+        prerequisites: ['MATH 021'], materials: []
+    },
+    {
+        id: 'EES 021', crn: '62004', title: 'Geology and Earth Processes',
+        instructor: 'Prof. Norm Scully',
+        description: 'An introduction to the materials, structures, and processes that shape the Earth. Topics include plate tectonics, minerals, rocks, volcanoes, and earthquakes.',
+        credits: 3, subject: 'Natural Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 3:00 PM - 4:15 PM', location: 'STEPS 101', instructor: 'Prof. Norm Scully' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'ENGL 100', crn: '63001', title: 'Working With Literature',
+        instructor: 'Dr. Michael Hitchcock',
+        description: 'Introduces students to the analytical tools and critical vocabulary used in literary studies through close reading of poetry, drama, and fiction.',
+        credits: 4, subject: 'Humanities',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 11:10 AM - 12:00 PM', location: 'Drown Hall 104', instructor: 'Dr. Michael Hitchcock' }],
+        prerequisites: ['WRT 001'], materials: []
+    },
+    {
+        id: 'HIST 001', crn: '63002', title: 'The Making of the Modern World',
+        instructor: 'Prof. Eleanor Shellstrop',
+        description: 'A survey of major global developments from the 15th century to the present, focusing on cross-cultural interactions and the rise of modern societies.',
+        credits: 4, subject: 'Humanities',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Maginnes Hall 101', instructor: 'Prof. Eleanor Shellstrop' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'PHIL 001', crn: '63003', title: 'Introduction to Philosophy',
+        instructor: 'Prof. Chidi Anagonye',
+        description: 'An introduction to fundamental philosophical questions concerning knowledge, reality, and morality through the study of classical and contemporary texts.',
+        credits: 4, subject: 'Humanities',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Maginnes Hall 112', instructor: 'Prof. Chidi Anagonye' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'ART 001', crn: '63004', title: 'Introduction to Art History',
+        instructor: 'Prof. Tahani Al-Jamil',
+        description: 'A chronological survey of Western art and architecture from ancient times to the Renaissance, focusing on style, context, and meaning.',
+        credits: 4, subject: 'Humanities',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Zoellner Arts Center 101', instructor: 'Prof. Tahani Al-Jamil' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'PSYC 001', crn: '64001', title: 'Introduction to Psychology',
+        instructor: 'Dr. Jason Mendoza',
+        description: 'A survey of the major topics in psychology, including learning, memory, perception, development, personality, and social behavior.',
+        credits: 4, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 9:10 AM - 10:00 AM', location: 'Chandler-Ullmann 218', instructor: 'Dr. Jason Mendoza' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'SOC 001', crn: '64002', title: 'Introduction to Sociology',
+        instructor: 'Prof. Janet',
+        description: 'The study of human social relationships and institutions. Topics include culture, socialization, social inequality, and social change.',
+        credits: 4, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Price Hall Aud', instructor: 'Prof. Janet' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'POLS 001', crn: '64003', title: 'American Political System',
+        instructor: 'Prof. Michael',
+        description: 'An introduction to the institutions and processes of American government, including the Constitution, presidency, Congress, and political parties.',
+        credits: 4, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 10:10 AM - 11:00 AM', location: 'Maginnes Hall 101', instructor: 'Prof. Michael' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'IR 010', crn: '64004', title: 'Introduction to World Politics',
+        instructor: 'Prof. Shawn',
+        description: 'Examines key issues in international relations, including war and peace, international law, and the global economy. Introduces major theories of international politics.',
+        credits: 4, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Price Hall Aud', instructor: 'Prof. Shawn' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'ANTH 001', crn: '64005', title: 'Introduction to Cultural Anthropology',
+        instructor: 'Dr. Derek Hoffstetler',
+        description: 'Exploration of human cultures and societies from around the world. Topics include kinship, religion, language, and economic systems in a cross-cultural perspective.',
+        credits: 4, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 2:10 PM - 3:00 PM', location: 'Maginnes Hall 112', instructor: 'Dr. Derek Hoffstetler' }],
+        prerequisites: [], materials: []
+    },
+    {
+        id: 'BIS 311', crn: '50701', title: 'Management of Business Information Systems',
+        instructor: 'Prof. Glenn',
+        description: 'Examines the role of information systems in business and management. Topics include IS strategy, data management, enterprise systems, and cybersecurity from a managerial perspective.',
+        credits: 3, subject: 'Business',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 141', instructor: 'Prof. Glenn' }],
+        prerequisites: ['BUS 001'], materials: []
+    },
+    {
+        id: 'ECO 119', crn: '45685', title: 'International Economics',
+        instructor: 'Dr. Dina Fox',
+        description: 'Analysis of international trade, finance, commercial policy, and the effects of globalization on national economies.',
+        credits: 3, subject: 'Social Science',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Rauch Business Ctr 085', instructor: 'Dr. Dina Fox' }],
+        prerequisites: ['ECO 001'], materials: []
+    },
+    {
+        id: 'CSE 303', crn: '12359', title: 'Operating System Design',
+        instructor: 'Prof. Michael Spear',
+        description: 'Principles of operating systems: concurrency, synchronization, scheduling, memory management, file systems, and security.',
+        credits: 3, subject: 'Engineering',
+        reviews: [], sections: [{ id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Packard Lab 101', instructor: 'Prof. Michael Spear' }],
+        prerequisites: ['CSE 202'], materials: []
     }
   ];

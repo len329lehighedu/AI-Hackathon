@@ -44,7 +44,7 @@ const Evaluate: React.FC<EvaluateProps> = ({ courses, onAddReview }) => {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-lehigh-gold mb-6 text-center">Evaluate a Course or Professor</h2>
+            <h2 className="text-3xl font-bold text-lehigh-gold mb-6 text-center">Provide Feedback on a Course or Professor</h2>
             <div className="max-w-3xl mx-auto">
                 <p className="text-center text-lehigh-light-gold mb-4">Find a course you've taken to share your experience with other students.</p>
                 <input
