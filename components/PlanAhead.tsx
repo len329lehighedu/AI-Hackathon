@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+
+import React, { useState, useMemo } from 'react';
 import { SemesterPlan, Course, Major } from '../types';
 import { MAJORS } from '../constants';
+import ScheduleVisualizer from './ScheduleVisualizer';
+import Chatbot from './Chatbot';
 
 interface PlannedCourseCardProps {
     course: Course;
@@ -14,7 +17,7 @@ const PlannedCourseCard: React.FC<PlannedCourseCardProps> = ({ course, semester,
             <p className="font-bold">{course.id}</p>
             <p className="text-sm text-gray-600">{course.title}</p>
         </div>
-        <button onClick={() => onRemove(course.id, semester)} className="text-lehigh-red hover:text-red-700 font-bold text-xl">
+        <button onClick={() => onRemove(course.id, semester)} className="text-lehigh-red hover:text-red-700 font-bold text-xl" aria-label={`Remove ${course.title} from plan`}>
             &times;
         </button>
     </div>
@@ -32,107 +35,123 @@ const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRe
 
     return (
         <div className="bg-lehigh-darker-brown rounded-lg p-4 flex flex-col h-full">
-            <div className="flex justify-between items-baseline mb-4">
-                <h3 className="text-xl font-bold text-lehigh-gold">{semester}</h3>
-                <p className="text-sm font-semibold text-lehigh-light-gold">{totalCredits} Credits</p>
-            </div>
-            {courses.length > 0 ? (
-                <div className="space-y-3 overflow-y-auto flex-grow">
-                    {courses.map(course => (
-                        <PlannedCourseCard 
-                            key={course.id} 
-                            course={course} 
+            <h3 className="text-lg font-bold text-lehigh-gold mb-3 text-center">{semester}</h3>
+            <div className="space-y-3 flex-grow overflow-y-auto pr-1">
+                {courses.length > 0 ? (
+                    courses.map(course => (
+                        <PlannedCourseCard
+                            key={course.id}
+                            course={course}
                             semester={semester}
-                            onRemove={onRemoveCourseFromPlan} 
+                            onRemove={onRemoveCourseFromPlan}
                         />
-                    ))}
-                </div>
-            ) : (
-                <div className="flex-grow flex items-center justify-center">
-                    <p className="text-lehigh-light-gold italic">No courses planned.</p>
-                </div>
-            )}
+                    ))
+                ) : (
+                    <p className="text-center text-sm text-lehigh-light-gold/70 pt-4">No courses planned.</p>
+                )}
+            </div>
+            <div className="border-t border-lehigh-brown mt-3 pt-3 text-center">
+                <p className="font-bold text-white">Total Credits: {totalCredits}</p>
+            </div>
         </div>
     );
+};
+
+interface MajorRequirementsProps {
+    selectedMajor: Major | null;
+    plannedCourses: Course[];
 }
 
+const MajorRequirements: React.FC<MajorRequirementsProps> = ({ selectedMajor, plannedCourses }) => {
+    if (!selectedMajor) {
+        return null;
+    }
+
+    const plannedCourseIds = new Set(plannedCourses.map(c => c.id));
+    const requiredCourses = selectedMajor.requiredCourses;
+    const completedCourses = requiredCourses.filter(id => plannedCourseIds.has(id));
+    const remainingCourses = requiredCourses.filter(id => !plannedCourseIds.has(id));
+
+    return (
+        <div className="bg-lehigh-brown/30 p-4 rounded-lg">
+            <h3 className="text-xl font-bold text-lehigh-gold mb-4">Requirements for {selectedMajor.name}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 className="font-semibold text-lehigh-light-gold mb-2">Completed ({completedCourses.length}/{requiredCourses.length})</h4>
+                    <ul className="list-disc list-inside text-sm space-y-1">
+                        {completedCourses.length > 0 ? completedCourses.map(id => <li key={id} className="text-green-300">{id}</li>) : <li className="text-gray-400">None</li>}
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="font-semibold text-lehigh-light-gold mb-2">Remaining</h4>
+                     <ul className="list-disc list-inside text-sm space-y-1">
+                        {remainingCourses.length > 0 ? remainingCourses.map(id => <li key={id} className="text-yellow-300">{id}</li>) : <li className="text-gray-400">All requirements met!</li>}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 interface PlanAheadProps {
-  semesterPlan: SemesterPlan;
-  onRemoveCourseFromPlan: (courseId: string, semester: string) => void;
-  onAddCourseToPlan: (course: Course, semester: string) => void;
-  allCourses: Course[];
+    semesterPlan: SemesterPlan;
+    onRemoveCourseFromPlan: (courseId: string, semester: string) => void;
+    onAddCourseToPlan: (course: Course, semester: string) => void;
+    allCourses: Course[];
 }
 
 const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromPlan, onAddCourseToPlan, allCourses }) => {
-    const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
-
-    // Fix: Explicitly type `c` as `Course` to help TypeScript's type inference,
-    // which can sometimes fail with chained methods like `.flat().map()`.
-    const plannedCourseIds = Object.values(semesterPlan).flat().map((c: Course) => c.id);
-    const requiredCoursesForMajor = selectedMajor ? allCourses.filter(c => selectedMajor.requiredCourses.includes(c.id)) : [];
-    const unselectedRequired = requiredCoursesForMajor.filter(c => !plannedCourseIds.includes(c.id));
-  
+    const [selectedMajorName, setSelectedMajorName] = useState<string>('None');
+    
+    const plannedCourses = useMemo(() => Object.values(semesterPlan).flat(), [semesterPlan]);
+    const selectedMajor = useMemo(() => MAJORS.find(m => m.name === selectedMajorName) || null, [selectedMajorName]);
+    
     return (
-    <div>
-        <h2 className="text-3xl font-bold text-lehigh-gold mb-6">Your Academic Plan</h2>
-        
-        <div className="bg-lehigh-darker-brown p-4 rounded-lg mb-8">
-            <h3 className="text-xl font-bold text-lehigh-gold mb-3">Plan by Major Requirements</h3>
-            <select 
-                onChange={e => setSelectedMajor(MAJORS.find(m => m.name === e.target.value) || null)} 
-                className="w-full md:w-1/2 bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-            >
-                <option value="">Select a Major...</option>
-                {MAJORS.map(m => <option key={m.name} value={m.name}>{m.name}</option>)}
-            </select>
-            
-            {selectedMajor && (
-                <div className="mt-4">
-                    <h4 className="font-semibold text-lehigh-light-gold mb-2">Remaining requirements for {selectedMajor.name}:</h4>
-                    {unselectedRequired.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {unselectedRequired.map(course => (
-                            <div key={course.id} className="bg-lehigh-brown/50 p-3 rounded-md flex justify-between items-center">
-                                <div>
-                                    <p className="font-semibold">{course.id}</p>
-                                    <p className="text-xs">{course.title}</p>
-                                </div>
-                                <div className="relative group">
-                                    <button className="bg-lehigh-gold text-lehigh-dark-brown px-2 py-1 rounded-md text-sm font-semibold">+</button>
-                                    <div className="absolute bottom-full mb-2 w-48 bg-white rounded-md shadow-lg z-10 border border-lehigh-light-gold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
-                                        {Object.keys(semesterPlan).map(semester => (
-                                            <button 
-                                                key={semester}
-                                                onClick={() => onAddCourseToPlan(course, semester)}
-                                                className="block w-full text-left px-4 py-2 text-sm text-lehigh-dark-brown hover:bg-lehigh-light-gold"
-                                            >
-                                                Add to {semester}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        </div>
-                    ) : (
-                        <p className="text-green-400 italic">All required courses for this major are in your plan!</p>
-                    )}
-                </div>
-            )}
-        </div>
+        <div className="space-y-8">
+            <h2 className="text-3xl font-bold text-lehigh-gold text-center">Plan Your Academic Journey</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Object.entries(semesterPlan).map(([semester, courses]) => (
-                <SemesterColumn 
-                    key={semester} 
-                    semester={semester} 
-                    courses={courses}
-                    onRemoveCourseFromPlan={onRemoveCourseFromPlan}
-                />
-            ))}
+            <div className="max-w-4xl mx-auto space-y-4">
+                 <div>
+                    <label htmlFor="major-select" className="block text-lg font-semibold text-lehigh-gold mb-2">Track Major Requirements:</label>
+                    <select
+                        id="major-select"
+                        value={selectedMajorName}
+                        onChange={e => setSelectedMajorName(e.target.value)}
+                        className="w-full max-w-md bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+                    >
+                        <option value="None">-- Select a Major --</option>
+                        {MAJORS.map(major => <option key={major.name} value={major.name}>{major.name}</option>)}
+                    </select>
+                </div>
+                {selectedMajor && <MajorRequirements selectedMajor={selectedMajor} plannedCourses={plannedCourses} />}
+            </div>
+
+            <div>
+                <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Weekly Schedule</h3>
+                <ScheduleVisualizer courses={plannedCourses} />
+            </div>
+
+            <div>
+                <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Semester Breakdown</h3>
+                <div className="overflow-x-auto pb-4">
+                     <div className="grid grid-flow-col auto-cols-min sm:auto-cols-fr gap-4 min-w-[1200px] lg:min-w-full">
+                        {Object.entries(semesterPlan).map(([semester, courses]) => (
+                            <div key={semester} className="w-64 sm:w-auto">
+                                <SemesterColumn
+                                    semester={semester}
+                                    courses={courses}
+                                    onRemoveCourseFromPlan={onRemoveCourseFromPlan}
+                                />
+                             </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
+            <Chatbot allCourses={allCourses} />
         </div>
-    </div>
-  );
+    );
 };
 
 export default PlanAhead;

@@ -29,7 +29,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCou
   const currentSemester = getCourseSemester();
 
   return (
-    <div className="bg-white text-lehigh-dark-brown rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform transform hover:scale-105 duration-300">
+    <div className="bg-white text-lehigh-dark-brown rounded-lg shadow-lg flex flex-col transition-transform transform hover:scale-105 duration-300">
       <div className="p-5 flex-grow">
         <div className="flex justify-between items-start">
           <h3 className="text-lg font-bold text-lehigh-dark-brown">{course.id}: {course.title}</h3>
@@ -54,7 +54,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCou
             {currentSemester ? `Added to ${currentSemester.split(' ')[0]} '${currentSemester.split(' ')[1].slice(2)}` : 'Add to Plan'}
           </button>
           {isDropdownOpen && (
-            <div className="absolute bottom-full mb-2 w-full sm:w-48 bg-white rounded-md shadow-lg z-10 border border-lehigh-light-gold">
+            <div className="absolute top-full mt-2 w-full sm:w-48 bg-white rounded-md shadow-lg z-20 border border-lehigh-light-gold">
               {Object.keys(semesterPlan).map(semester => (
                 <button 
                   key={semester}

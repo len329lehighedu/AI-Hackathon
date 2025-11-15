@@ -1,4 +1,3 @@
-
 export interface Review {
   id: number;
   author: string;
@@ -44,4 +43,9 @@ export interface Major {
 
 export interface SemesterPlan {
   [semester: string]: Course[];
+}
+
+export interface ChatMessage {
+  sender: 'user' | 'bot';
+  text: string;
 }
