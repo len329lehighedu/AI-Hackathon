@@ -28,8 +28,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onViewDetails, onAddCou
     <div className="bg-white text-lehigh-dark-brown rounded-lg shadow-lg flex flex-col transition-transform transform hover:scale-105 duration-300 select-none">
       <div className="p-5 flex-grow">
         <div className="flex justify-between items-start">
-          <h3 className="text-lg font-bold text-lehigh-dark-brown">{course.id}: {course.title}</h3>
-          <span className="text-sm font-semibold bg-lehigh-light-gold text-lehigh-dark-brown px-2 py-1 rounded-full">{course.credits} Cr</span>
+          <h3 className="text-lg font-bold text-lehigh-dark-brown mr-2">{course.id}: {course.title}</h3>
+          <span className="flex-shrink-0 text-sm font-semibold bg-lehigh-light-gold text-lehigh-dark-brown px-2 py-1 rounded-full">{course.credits} credits</span>
         </div>
         <p className="text-sm text-lehigh-brown mt-1">{course.subject}</p>
         <p className="text-sm text-gray-700 mt-2">Instructor: {course.instructor}</p>
