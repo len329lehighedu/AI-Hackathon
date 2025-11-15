@@ -12,7 +12,7 @@ interface PlannedCourseCardProps {
 }
 
 const PlannedCourseCard: React.FC<PlannedCourseCardProps> = ({ course, semester, onRemove }) => (
-    <div className="bg-white p-3 rounded-lg shadow flex justify-between items-center text-lehigh-dark-brown">
+    <div className="bg-white p-3 rounded-lg shadow flex justify-between items-center text-lehigh-dark-brown select-none">
         <div>
             <p className="font-bold">{course.id}</p>
             <p className="text-sm text-gray-600">{course.title}</p>
@@ -73,7 +73,7 @@ const MajorRequirements: React.FC<MajorRequirementsProps> = ({ selectedMajor, pl
     const remainingCourses = requiredCourses.filter(id => !plannedCourseIds.has(id));
 
     return (
-        <div className="bg-lehigh-brown/30 p-4 rounded-lg">
+        <div className="bg-lehigh-brown/30 p-4 rounded-lg select-none">
             <h3 className="text-xl font-bold text-lehigh-gold mb-4">Requirements for {selectedMajor.name}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

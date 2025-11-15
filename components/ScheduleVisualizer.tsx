@@ -97,7 +97,7 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
                        return (
                            <div
                                 key={event.id}
-                                className={`absolute w-full p-2 rounded-lg text-white text-xs overflow-hidden border ${event.color}`}
+                                className={`absolute w-full p-2 rounded-lg text-white text-xs overflow-hidden border ${event.color} select-none`}
                                 style={{
                                     top: `${top}rem`,
                                     height: `${height}rem`,

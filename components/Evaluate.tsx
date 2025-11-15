@@ -9,7 +9,7 @@ interface EvaluationCourseCardProps {
 }
 
 const EvaluationCourseCard: React.FC<EvaluationCourseCardProps> = ({ course, onWriteReview }) => (
-    <div className="bg-lehigh-brown/50 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+    <div className="bg-lehigh-brown/50 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center gap-4 select-none">
         <div>
             <h3 className="font-bold text-lehigh-gold">{course.id}: {course.title}</h3>
             <p className="text-sm text-lehigh-light-gold">Instructor: {course.instructor}</p>

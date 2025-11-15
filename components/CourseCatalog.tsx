@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Course, Major, SemesterPlan, Subject } from '../types';
 import { MAJORS, SUBJECTS } from '../constants';
@@ -125,6 +124,16 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
   const [instructorSearchTerm, setInstructorSearchTerm] = useState('');
   const [crnSearchTerm, setCrnSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [openDropdownCourseId, setOpenDropdownCourseId] = useState<string | null>(null);
+
+  const handleToggleDropdown = (courseId: string) => {
+    setOpenDropdownCourseId(prevId => (prevId === courseId ? null : courseId));
+  };
+
+  const handleAddCourseAndCloseDropdown = (course: Course, semester: string) => {
+    onAddCourseToPlan(course, semester);
+    setOpenDropdownCourseId(null);
+  };
 
   const filteredCourses = useMemo(() => {
     let filtered = [...courses];
@@ -186,8 +195,10 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
                 key={course.id} 
                 course={course} 
                 onViewDetails={() => setSelectedCourse(course)}
-                onAddCourseToPlan={onAddCourseToPlan}
+                onAddCourseToPlan={handleAddCourseAndCloseDropdown}
                 semesterPlan={semesterPlan}
+                openDropdownCourseId={openDropdownCourseId}
+                onToggleDropdown={handleToggleDropdown}
               />
             ))}
           </div>
