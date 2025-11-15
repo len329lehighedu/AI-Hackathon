@@ -103,9 +103,11 @@ interface PlanAheadProps {
 
 const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromPlan, onAddCourseToPlan, allCourses }) => {
     const [selectedMajorName, setSelectedMajorName] = useState<string>('None');
-    
+    const [selectedSemesterTab, setSelectedSemesterTab] = useState(Object.keys(semesterPlan)[0] || '');
+
     const plannedCourses = useMemo(() => Object.values(semesterPlan).flat(), [semesterPlan]);
     const selectedMajor = useMemo(() => MAJORS.find(m => m.name === selectedMajorName) || null, [selectedMajorName]);
+    const coursesForVisualizer = useMemo(() => semesterPlan[selectedSemesterTab] || [], [semesterPlan, selectedSemesterTab]);
     
     return (
         <div className="space-y-8">
@@ -129,13 +131,28 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
 
             <div>
                 <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Weekly Schedule</h3>
-                <ScheduleVisualizer courses={plannedCourses} />
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {Object.keys(semesterPlan).map(semester => (
+                        <button
+                            key={semester}
+                            onClick={() => setSelectedSemesterTab(semester)}
+                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors duration-200 ${
+                                selectedSemesterTab === semester
+                                    ? 'bg-lehigh-gold text-lehigh-dark-brown'
+                                    : 'bg-lehigh-brown hover:bg-lehigh-light-gold hover:text-lehigh-dark-brown'
+                            }`}
+                        >
+                            {semester}
+                        </button>
+                    ))}
+                </div>
+                <ScheduleVisualizer courses={coursesForVisualizer} />
             </div>
 
             <div>
                 <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Semester Breakdown</h3>
                 <div className="overflow-x-auto pb-4">
-                     <div className="grid grid-flow-col auto-cols-[14rem] sm:auto-cols-fr gap-4">
+                     <div className="grid grid-flow-col auto-cols-[16rem] gap-4">
                         {Object.entries(semesterPlan).map(([semester, courses]) => (
                             <SemesterColumn
                                 key={semester}

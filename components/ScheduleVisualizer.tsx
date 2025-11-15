@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Course } from '../types';
 
@@ -5,9 +6,13 @@ interface ScheduleVisualizerProps {
     courses: Course[];
 }
 
-const DAYS = ['M', 'T', 'W', 'Th', 'F'];
-const TIME_LABELS = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`); // 8am to 8pm
-const START_HOUR = 8;
+const DAYS = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
+const TIME_LABELS = Array.from({ length: 24 }, (_, i) => {
+    const hour = i % 12 === 0 ? 12 : i % 12;
+    const ampm = i < 12 ? 'AM' : 'PM';
+    return `${hour} ${ampm}`;
+});
+const START_HOUR = 0;
 
 const COURSE_COLORS = [
     'bg-lehigh-gold/80 border-lehigh-gold',
@@ -37,11 +42,11 @@ const parseTime = (timeStr: string) => {
         return { days: [], startMinutes: 0, endMinutes: 0 };
     }
 
-    const days = daysStr.match(/Th|M|T|W|F/g) || [];
+    const days = daysStr.match(/Su|Sa|Th|M|T|W|F/g) || [];
 
     const parseTime12hr = (t: string) => {
-        const isPM = t.includes('PM');
-        const [hour, minute] = t.replace(/AM|PM/, '').trim().split(':').map(Number);
+        const isPM = t.toUpperCase().includes('PM');
+        const [hour, minute] = t.replace(/AM|PM/i, '').trim().split(':').map(Number);
         let finalHour = hour;
         if (isPM && hour < 12) {
             finalHour += 12;
@@ -77,25 +82,25 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
 
     return (
         <div className="bg-lehigh-darker-brown p-4 rounded-lg overflow-x-auto">
-            <div className="grid grid-cols-[auto_repeat(5,minmax(0,1fr))] min-w-[700px]">
+            <div className="grid grid-cols-[auto_repeat(7,minmax(0,1fr))] min-w-[900px]">
                 {/* Headers */}
                 <div className="sticky left-0 bg-lehigh-darker-brown z-10"></div>
-                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => (
+                {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => (
                     <div key={day} className="text-center font-bold text-lehigh-gold pb-2">{day}</div>
                 ))}
 
                 {/* Grid layout */}
-                <div className="row-span-1 col-start-1 col-end-2 grid grid-rows-12">
-                    {TIME_LABELS.slice(0,-1).map(time => (
-                         <div key={time} className="text-right pr-2 text-xs text-lehigh-light-gold h-12 border-t border-lehigh-brown/50">{time}</div>
+                <div className="row-span-1 col-start-1 col-end-2 grid grid-rows-24">
+                    {TIME_LABELS.map(time => (
+                         <div key={time} className="text-right pr-2 text-xs text-lehigh-light-gold h-12 border-t border-lehigh-brown/50 pt-1">{time}</div>
                     ))}
                 </div>
                 <div 
-                    className="col-start-2 col-end-7 grid grid-cols-5 grid-rows-12 relative"
+                    className="col-start-2 col-end-9 grid grid-cols-7 grid-rows-24 relative"
                     style={{ backgroundSize: '1px 3rem', backgroundImage: 'linear-gradient(to bottom, transparent 2.95rem, rgba(147, 112, 219, 0.1) 2.95rem)'}}
                 >
                    {/* Dotted lines for days */}
-                   {[...Array(4)].map((_, i) => (
+                   {[...Array(6)].map((_, i) => (
                        <div key={i} className="h-full border-r border-dashed border-lehigh-brown/50" style={{ gridColumn: `${i+1} / span 1`, gridRow: '1 / -1' }}></div>
                    ))}
 
@@ -114,8 +119,8 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
                                 style={{
                                     top: `${top}rem`,
                                     height: `${height}rem`,
-                                    left: `${dayIndex * 20}%`, // 100% / 5 days = 20% per day
-                                    width: '20%',
+                                    left: `${dayIndex * (100 / 7)}%`,
+                                    width: `${100 / 7}%`,
                                 }}
                            >
                                <p className="font-bold">{event.course.id}</p>
