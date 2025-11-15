@@ -7,7 +7,7 @@ export interface Review {
   date: string;
 }
 
-export type Subject = 'Humanities' | 'Math' | 'Social Science' | 'Natural Science' | 'Electives' | 'Engineering';
+export type Subject = 'Humanities' | 'Math' | 'Social Science' | 'Natural Science' | 'Electives' | 'Engineering' | 'Business';
 
 export interface Course {
   id: string; // e.g., "CSE 109"

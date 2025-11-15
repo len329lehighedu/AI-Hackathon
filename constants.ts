@@ -8,7 +8,7 @@ export const MAJORS: Major[] = [
   { name: 'Finance (BS)', requiredCourses: ['ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111'] },
 ];
 
-export const SUBJECTS: Subject[] = ['Engineering', 'Humanities', 'Math', 'Natural Science', 'Social Science'];
+export const SUBJECTS: Subject[] = ['Engineering', 'Humanities', 'Math', 'Natural Science', 'Social Science',"Business"];
 
 export const ALL_COURSES: Course[] = [
     {
@@ -17,8 +17,8 @@ export const ALL_COURSES: Course[] = [
       description: 'An introduction to programming using a high-level language. Topics include variables, control structures, functions, and data structures.',
       credits: 4, subject: 'Engineering',
       reviews: [
-        { id: 1, author: 'Student A', rating: 8, comment: 'Great introductory course. Professor was very clear.', date: '2023-12-15' },
-        { id: 2, author: 'Student B', rating: 6, comment: 'The homeworks were quite challenging for a beginner.', date: '2023-12-10' },
+        { id: 1, author: 'anonymous', rating: 8, comment: 'Great introductory course. Professor was very clear.', date: '2023-12-15' },
+        { id: 2, author: 'anonymous', rating: 6, comment: 'The homeworks were quite challenging for a beginner.', date: '2023-12-10' },
       ]
     },
     {
@@ -27,7 +27,7 @@ export const ALL_COURSES: Course[] = [
       description: 'In-depth study of object-oriented programming and fundamental data structures. Covers lists, stacks, queues, trees, and graphs.',
       credits: 3, subject: 'Engineering',
       reviews: [
-        // { id: 3, author: 'Student C', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
+        { id: 3, author: 'anonymous', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
       ]
     },
     {
@@ -36,7 +36,7 @@ export const ALL_COURSES: Course[] = [
       description: 'Advanced programming and data structures, including dynamic structures, memory allocation, data organization, symbol tables, hash tables, B-trees, data files.',
       credits: 4, subject: 'Engineering',
       reviews: [
-        // { id: 3, author: 'Student C', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
+        { id: 3, author: 'anonymous', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
       ]
     },
     {
@@ -98,6 +98,15 @@ export const ALL_COURSES: Course[] = [
       description: 'Introduction to computer hardware and the interface between hardware and software. Topics include digital logic, processor design, memory hierarchy, and assembly language.',
       credits: 3, subject: 'Engineering',
       reviews: []
+    },
+    {
+      id: 'CSE 216', title: 'Software Engineering',
+      instructor: 'Prof. Mark Erle',
+      description: 'Introduction to computer hardware and the interface between hardware and software. Topics include digital logic, processor design, memory hierarchy, and assembly language.',
+      credits: 3, subject: 'Engineering',
+      reviews: [
+         { id: 7, author: 'anonymous', rating: 8, comment: 'Might be literal vibe coding', date: '2025-10-18' },
+      ]
     },
      {
       id: 'CSE 262', title: 'Software Engineering',

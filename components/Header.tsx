@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
     <header className="bg-lehigh-dark-brown sticky top-0 z-10 shadow-lg shadow-black/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
         <div className="flex items-center space-x-4">
-          <img src="https://storage.googleapis.com/aistudio-v2-a-prod-gcs-media/694966955006/instances/7279148766128046080/image.png" alt="Lehigh University Logo" className="h-12 w-auto" />
+          <img src="https://image2url.com/images/1763228287888-6ad21caf-3d8d-4987-8a8b-95aaaa0f7426.png" alt="Lehigh University Logo" className="h-12 w-auto" />
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Lehigh Course Planner</h1>
         </div>
         <nav className="flex space-x-2 sm:space-x-4 bg-lehigh-dark-brown p-1 rounded-lg">
