@@ -24,8 +24,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       <div className="w-full max-w-md p-8 space-y-8 bg-lehigh-darker-brown rounded-lg shadow-2xl border border-lehigh-light-gold/20">
         <div className="flex flex-col items-center">
           <img src="https://image2url.com/images/1763230135301-08ad8a08-f02f-4835-92a9-14af60f15d53.png" alt="Lehigh University Logo" className="h-16 w-auto mb-4" />
-          <h1 className="text-3xl font-bold text-center text-lehigh-gold">Lehigh Course Planner</h1>
-          <p className="mt-2 text-center text-lehigh-light-gold">Please log in with your Lehigh email.</p>
+          <h1 className="text-3xl font-bold text-center text-white">Lehigh Course Planner</h1>
+          <p className="mt-2 text-center text-white">Please log in with your Lehigh email.</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
@@ -38,7 +38,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="appearance-none rounded-md relative block w-full px-3 py-3 border border-lehigh-light-gold bg-lehigh-dark-brown text-white placeholder-gray-400 focus:outline-none focus:ring-lehigh-gold focus:border-lehigh-gold focus:z-10 sm:text-sm"
+              className="appearance-none rounded-md relative block w-full px-3 py-3 border border-lehigh-light-gold bg-white text-lehigh-dark-brown placeholder-gray-500 focus:outline-none focus:ring-lehigh-gold focus:border-lehigh-gold focus:z-10 sm:text-sm"
               placeholder="Email address (e.g., hawk@lehigh.edu)"
             />
           </div>
