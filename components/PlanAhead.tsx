@@ -165,7 +165,7 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
                 </div>
             </div>
             
-            <Chatbot allCourses={allCourses} />
+            <Chatbot allCourses={allCourses} majors={MAJORS} />
         </div>
     );
 };

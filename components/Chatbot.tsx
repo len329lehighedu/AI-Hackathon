@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI, Chat } from "@google/genai";
 import { startChat } from '../services/geminiService';
-import { Course, ChatMessage } from '../types';
+import { Course, ChatMessage, Major } from '../types';
 
 interface ChatbotProps {
     allCourses: Course[];
+    majors: Major[];
 }
 
-const Chatbot: React.FC<ChatbotProps> = ({ allCourses }) => {
+const Chatbot: React.FC<ChatbotProps> = ({ allCourses, majors }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
@@ -19,14 +20,14 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses }) => {
     useEffect(() => {
         if (isOpen && !chatRef.current) {
             try {
-                chatRef.current = startChat(allCourses);
-                setMessages([{ sender: 'bot', text: "Hello! I'm your AI course assistant. How can I help you plan your schedule today?" }]);
+                chatRef.current = startChat(allCourses, majors);
+                setMessages([{ sender: 'bot', text: "Hello! I'm your AI course assistant. I can help you with course selection and major requirements. How can I help you plan your schedule today?" }]);
             } catch (error) {
                 console.error("Failed to start chat:", error);
                 setMessages([{ sender: 'bot', text: "Sorry, I'm having trouble connecting right now. Please try again later." }]);
             }
         }
-    }, [isOpen, allCourses]);
+    }, [isOpen, allCourses, majors]);
     
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,8 +75,20 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses }) => {
             </button>
 
             {isOpen && (
-                <div className="fixed bottom-24 right-6 w-full max-w-sm h-full max-h-[600px] bg-lehigh-darker-brown rounded-lg shadow-2xl flex flex-col z-50 border-2 border-lehigh-light-gold">
-                    <header className="bg-lehigh-brown p-4 text-white font-bold text-lg flex justify-between items-center rounded-t-md">
+                <div
+                    className="fixed bottom-24 right-6 bg-lehigh-darker-brown rounded-lg shadow-2xl flex flex-col z-50 border-2 border-lehigh-light-gold"
+                    style={{
+                        resize: 'both',
+                        overflow: 'auto',
+                        width: '384px',
+                        height: '600px',
+                        minWidth: '320px',
+                        minHeight: '400px',
+                        maxWidth: '80vw',
+                        maxHeight: '80vh',
+                    }}
+                >
+                    <header className="bg-lehigh-brown p-4 text-white font-bold text-lg flex justify-between items-center rounded-t-md sticky top-0 z-10">
                         AI Course Assistant
                         <button onClick={() => setIsOpen(false)} className="text-2xl">&times;</button>
                     </header>
@@ -89,7 +102,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses }) => {
                         ))}
                          <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-4 border-t border-lehigh-brown flex items-center">
+                    <div className="p-4 border-t border-lehigh-brown flex items-center sticky bottom-0 bg-lehigh-darker-brown">
                         <input
                             type="text"
                             value={input}

@@ -5,6 +5,7 @@ export const MAJORS: Major[] = [
   { name: 'Mechanical Engineering (BS)', requiredCourses: ['PHY 011', 'MATH 205', 'MECH 003', 'MECH 225', 'MECH 240'] },
   { name: 'English (BA)', requiredCourses: ['WRT 001', 'ENGL 111', 'ENGL 125'] },
   { name: 'Finance (BS)', requiredCourses: ['ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111'] },
+  { name: 'Computer Science and Business (BS)', requiredCourses: ['CSE 007', 'CSE 017', 'CSE 109', 'ECO 001', 'ACCT 151', 'FIN 125', 'MKT 111', 'MATH 205'] }
 ];
 
 export const SUBJECTS: Subject[] = ['Engineering', 'Humanities', 'Math', 'Natural Science', 'Social Science',"Business"];
@@ -150,25 +151,104 @@ export const ALL_COURSES: Course[] = [
       prerequisites: ['CSE 109'], materials: []
     },
      {
-      id: 'CSE 262', crn: '12352', title: 'Software Engineering',
+      id: 'CSE 262', crn: '12352', title: 'Programming Languages',
       instructor: 'Prof. Linda Davis',
-      description: 'Principles and practices of software development, including requirements, design, implementation, testing, and project management. Group project required.',
+      description: 'Use, structure and implementation of several programming languages',
       credits: 3, subject: 'Engineering',
       reviews: [], 
       sections: [
         { id: '10', type: 'Lecture', time: 'TTh 3:00 PM - 4:15 PM', location: 'Lewis Lab 316', instructor: 'Prof. Linda Davis' }
       ], 
-      prerequisites: ['CSE 216'], materials: []
+      prerequisites: ['CSE 017'], materials: []
     },
     {
       id: 'FIN 125', crn: '45679', title: 'Introduction to Finance',
       instructor: 'Dr. Patricia Taylor',
       description: 'Overview of financial markets, investments, and corporate finance. Topics include time value of money, risk and return, and valuation.',
-      credits: 3, subject: 'Social Science',
+      credits: 3, subject: 'Business',
       reviews: [], 
       sections: [
         { id: '10', type: 'Lecture', time: 'MWF 10:10 AM - 11:00 AM', location: 'Rauch Business Ctr 091', instructor: 'Dr. Patricia Taylor' }
       ], 
       prerequisites: ['ECO 001'], materials: []
+    },
+    {
+      id: 'ACCT 151', crn: '50101', title: 'Introduction to Financial Accounting',
+      instructor: 'Prof. Michael Chen',
+      description: 'An introduction to the principles and concepts of financial accounting. Topics include the accounting cycle, financial statements, and analysis of business transactions.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Rauch Business Ctr 120', instructor: 'Prof. Michael Chen' }
+      ],
+      prerequisites: ['ECO 001'], materials: []
+    },
+    {
+      id: 'ACCT 152', crn: '50102', title: 'Introduction to Managerial Accounting',
+      instructor: 'Dr. Linda White',
+      description: 'An introduction to the use of accounting information for managerial decision-making. Topics include cost behavior, budgeting, performance evaluation, and cost-volume-profit analysis.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 1:10 PM - 2:00 PM', location: 'Rauch Business Ctr 122', instructor: 'Dr. Linda White' }
+      ],
+      prerequisites: ['ACCT 151'], materials: []
+    },
+    {
+      id: 'MKT 111', crn: '50201', title: 'Principles of Marketing',
+      instructor: 'Prof. David Clark',
+      description: 'A comprehensive introduction to the field of marketing. The course covers key marketing concepts, strategies, and practices, including market research, consumer behavior, product development, pricing, promotion, and distribution.',
+      credits: 3, subject: 'Business',
+      reviews: [
+        { id: 8, author: 'anonymous', rating: 9, comment: 'Great overview of marketing. Professor Clark is very engaging.', date: '2024-01-05' },
+      ],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Rauch Business Ctr 085', instructor: 'Prof. David Clark' }
+      ],
+      prerequisites: ['ECO 001'], materials: []
+    },
+    {
+      id: 'MGT 043', crn: '50301', title: 'Organizational Behavior',
+      instructor: 'Dr. Susan Adams',
+      description: 'Study of individual and group behavior in organizations. Topics include motivation, leadership, communication, team dynamics, organizational culture, and managing change.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MWF 11:10 AM - 12:00 PM', location: 'Rauch Business Ctr 111', instructor: 'Dr. Susan Adams' }
+      ],
+      prerequisites: [], materials: []
+    },
+    {
+      id: 'LAW 201', crn: '50401', title: 'Legal Environment of Business',
+      instructor: 'Prof. James Miller',
+      description: 'An introduction to the U.S. legal system and its impact on business. Topics include contracts, torts, property, business entities, and government regulation.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 143', instructor: 'Prof. James Miller' }
+      ],
+      prerequisites: ['ECO 001'], materials: []
+    },
+    {
+      id: 'SCM 186', crn: '50501', title: 'Introduction to Supply Chain Management',
+      instructor: 'Dr. Robert Garcia',
+      description: 'This course provides an overview of supply chain management concepts. Topics include logistics, inventory management, procurement, operations, and information technology in the supply chain.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'MW 3:00 PM - 4:15 PM', location: 'Rauch Business Ctr 091', instructor: 'Dr. Robert Garcia' }
+      ],
+      prerequisites: ['ECO 001', 'MATH 021'], materials: []
+    },
+    {
+      id: 'MGT 301', crn: '50302', title: 'Strategic Management',
+      instructor: 'Prof. Maria Hernandez',
+      description: 'Capstone course in business. Focuses on the formulation and implementation of corporate and business strategy. Integrates concepts from various business disciplines.',
+      credits: 3, subject: 'Business',
+      reviews: [],
+      sections: [
+        { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Rauch Business Ctr 171', instructor: 'Prof. Maria Hernandez' }
+      ],
+      prerequisites: ['FIN 125', 'MKT 111'], materials: []
     }
   ];

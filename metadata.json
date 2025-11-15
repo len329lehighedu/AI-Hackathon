@@ -1,5 +1,5 @@
 {
-  "name": "Lehigh University CSB Course Evaluator",
+  "name": "Lehigh University Course Browser",
   "description": "A comprehensive course evaluator and planning tool for Lehigh University students. Browse courses, read and write reviews, get AI-powered summaries, and plan your academic journey semester by semester.",
   "requestFramePermissions": []
 }

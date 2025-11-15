@@ -1,5 +1,5 @@
 import { GoogleGenAI, Chat } from "@google/genai";
-import { Review, Course } from "../types";
+import { Review, Course, Major } from "../types";
 
 const API_KEY = process.env.API_KEY;
 
@@ -40,7 +40,7 @@ ${reviews.map(r => `- Rating: ${r.rating}/10. Comment: "${r.comment}"`).join('\n
 
 let chat: Chat | null = null;
 
-export const startChat = (courses: Course[]): Chat => {
+export const startChat = (courses: Course[], majors: Major[]): Chat => {
   if (chat) {
     // To simplify, we don't reset the chat context. 
     // A more advanced implementation might reset if the course list changes significantly.
@@ -59,11 +59,16 @@ export const startChat = (courses: Course[]): Chat => {
     prerequisites: c.prerequisites,
     sections: c.sections.map(s => `${s.type} ${s.time} at ${s.location}`).join(', ')
   })));
+  
+  const majorInfo = JSON.stringify(majors.map(m => ({
+    name: m.name,
+    requiredCourses: m.requiredCourses
+  })));
 
   chat = ai.chats.create({
     model: 'gemini-2.5-flash',
     config: {
-      systemInstruction: `You are a friendly and knowledgeable academic advisor for Lehigh University. Your goal is to help students plan their courses. You have access to the following course data (in JSON format):\n\n${courseInfo}\n\nAnswer student questions about courses, prerequisites, schedules, and potential study paths. Use the provided data to give accurate answers. Be concise and helpful. If you don't know something based on the data, say so. Do not make up information.`,
+      systemInstruction: `You are a friendly and knowledgeable academic advisor for Lehigh University. Your goal is to help students plan their courses in a simple and clear way. You have access to the following course data (in JSON format):\n\n${courseInfo}\n\nAnd the following major requirement data:\n\n${majorInfo}\n\nAnswer student questions about courses, prerequisites, schedules, and study paths. When answering, follow these rules:\n1. Be direct and use simple language. Avoid complex sentences.\n2. When suggesting courses, use a bulleted list.\n3. Keep your tone encouraging and straightforward.\n4. Stick strictly to the provided data. If the information isn't in the data, just say you don't have that information.\n5. Do not make up any information.`,
     },
   });
   return chat;
