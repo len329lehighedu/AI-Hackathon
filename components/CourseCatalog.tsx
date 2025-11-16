@@ -10,9 +10,18 @@ interface FilterSidebarProps {
   setSelectedMajor: (major: string) => void;
   selectedSubjects: string[];
   setSelectedSubjects: (subjects: string[]) => void;
+  instructorSearch: string;
+  setInstructorSearch: (value: string) => void;
+  crnSearch: string;
+  setCrnSearch: (value: string) => void;
 }
 
-const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects }) => {
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ 
+  selectedMajor, setSelectedMajor, 
+  selectedSubjects, setSelectedSubjects,
+  instructorSearch, setInstructorSearch,
+  crnSearch, setCrnSearch
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const handleSubjectChange = (subject: string) => {
@@ -45,6 +54,26 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
         className={`transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}
       >
         <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-brand-text mb-2">Search by Instructor</h3>
+            <input 
+              type="text"
+              value={instructorSearch}
+              onChange={(e) => setInstructorSearch(e.target.value)}
+              placeholder="e.g., Sarah Johnson"
+              className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary focus:ring-brand-primary focus:border-brand-primary"
+            />
+          </div>
+           <div>
+            <h3 className="text-lg font-semibold text-brand-text mb-2">Search by CRN</h3>
+            <input 
+              type="text"
+              value={crnSearch}
+              onChange={(e) => setCrnSearch(e.target.value)}
+              placeholder="e.g., 12345"
+              className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary focus:ring-brand-primary focus:border-brand-primary"
+            />
+          </div>
           <div>
             <h3 className="text-lg font-semibold text-brand-text mb-2">Filter by Major</h3>
             <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary focus:ring-brand-primary focus:border-brand-primary">
@@ -86,6 +115,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
   const [selectedMajor, setSelectedMajor] = useState('All');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [instructorSearch, setInstructorSearch] = useState('');
+  const [crnSearch, setCrnSearch] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [openDropdownCourseId, setOpenDropdownCourseId] = useState<string | null>(null);
 
@@ -112,18 +143,29 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
       filtered = filtered.filter(c => c.subject && selectedSubjects.includes(c.subject));
     }
 
+    if (instructorSearch.trim() !== '') {
+      const lowercasedTerm = instructorSearch.toLowerCase();
+      filtered = filtered.filter(c => 
+        c.instructor?.toLowerCase().includes(lowercasedTerm)
+      );
+    }
+    
+    if (crnSearch.trim() !== '') {
+      filtered = filtered.filter(c => 
+        c.crn?.includes(crnSearch.trim())
+      );
+    }
+
     if (searchTerm.trim() !== '') {
       const lowercasedTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(c => 
         c.id?.toLowerCase().includes(lowercasedTerm) || 
-        c.title?.toLowerCase().includes(lowercasedTerm) ||
-        c.instructor?.toLowerCase().includes(lowercasedTerm) ||
-        c.crn?.includes(lowercasedTerm)
+        c.title?.toLowerCase().includes(lowercasedTerm)
       );
     }
 
     return filtered;
-  }, [courses, selectedMajor, selectedSubjects, searchTerm]);
+  }, [courses, selectedMajor, selectedSubjects, searchTerm, instructorSearch, crnSearch]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -133,6 +175,10 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
             setSelectedMajor={setSelectedMajor}
             selectedSubjects={selectedSubjects}
             setSelectedSubjects={setSelectedSubjects}
+            instructorSearch={instructorSearch}
+            setInstructorSearch={setInstructorSearch}
+            crnSearch={crnSearch}
+            setCrnSearch={setCrnSearch}
         />
       </div>
       <div className="lg:col-span-3">
@@ -146,7 +192,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by course ID, title, instructor, or CRN..."
+              placeholder="Search by course ID or title..."
               className="w-full bg-brand-surface p-3 pl-10 rounded-lg border border-brand-secondary focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
             />
         </div>
