@@ -38,12 +38,15 @@ interface SemesterColumnProps {
 
 const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRemoveCourseFromPlan, conflicts }) => {
     const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
+    const CREDIT_LIMIT = 18;
+    const isOverloaded = totalCredits > CREDIT_LIMIT;
 
     return (
-        <div className="bg-brand-surface rounded-lg p-4 flex flex-col h-full border border-brand-secondary">
+        <div className={`bg-brand-surface rounded-lg p-4 flex flex-col h-full border transition-all duration-300 ${isOverloaded ? 'border-yellow-500 ring-1 ring-yellow-400/50' : 'border-brand-secondary'}`}>
             <h3 className="text-lg font-bold text-brand-text mb-3 text-center flex items-center justify-center">
                 {semester}
-                {conflicts && conflicts.size > 0 && <span className="ml-2 text-red-500" title="Time conflict detected!">⚠️</span>}
+                {conflicts && conflicts.size > 0 && <span className="ml-2 text-lehigh-red" title="Time conflict detected!">⚠️</span>}
+                {isOverloaded && <span className="ml-2 text-yellow-600" title={`Credit Overload: ${totalCredits} credits. An overload form may be required.`}>⚠️</span>}
             </h3>
             <div className="space-y-3 flex-grow overflow-y-auto pr-1">
                 {courses.length > 0 ? (
@@ -68,7 +71,12 @@ const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRe
                 )}
             </div>
             <div className="border-t border-brand-secondary mt-3 pt-3 text-center">
-                <p className="font-bold text-brand-text">Total Credits: {totalCredits}</p>
+                <p className={`font-bold ${isOverloaded ? 'text-yellow-700' : 'text-brand-text'}`}>Total Credits: {totalCredits}</p>
+                {isOverloaded && (
+                    <p className="text-xs text-yellow-700 mt-1">
+                       Credit limit exceeded. An overload form may be required.
+                    </p>
+                )}
             </div>
         </div>
     );
@@ -119,7 +127,8 @@ const parseTime = (timeStr: string) => {
     const timeParts = timeRange.split('-').map(s => s.trim());
     const [startTimeStr, endTimeStr] = timeParts;
     if (!startTimeStr || !endTimeStr) return { days: [], startMinutes: 0, endMinutes: 0 };
-    const days = daysStr.match(/Su|Sa|Th|M|T|W|F/g) || [];
+    // FIX: Explicitly type `days` as string[] to prevent `never[]` type inference on the empty array fallback.
+    const days: string[] = daysStr.match(/Su|Sa|Th|M|T|W|F/g) || [];
     const parseTime12hr = (t: string) => {
         const isPM = t.toUpperCase().includes('PM');
         const [hour, minute] = t.replace(/AM|PM/i, '').trim().split(':').map(Number);
@@ -143,12 +152,14 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
     const [selectedSemesterTab, setSelectedSemesterTab] = useState(Object.keys(semesterPlan)[0] || '');
 
     const plannedCourses = useMemo(() => Object.values(semesterPlan).flat(), [semesterPlan]);
-    const selectedMajor = useMemo(() => MAJORS.find(m => m.name === selectedMajorName) || null, [selectedMajorName]);
+    // FIX: Explicitly type selectedMajor to prevent type inference issues.
+    const selectedMajor: Major | null = useMemo(() => MAJORS.find(m => m.name === selectedMajorName) || null, [selectedMajorName]);
     const coursesForVisualizer = useMemo(() => semesterPlan[selectedSemesterTab] || [], [semesterPlan, selectedSemesterTab]);
 
     const conflictsBySemester = useMemo(() => {
         const conflictsMap = new Map<string, Map<string, string[]>>(); // semester -> { courseId -> [conflictingCourseIds] }
-        Object.entries(semesterPlan).forEach(([semester, courses]) => {
+        // FIX: Cast Object.entries result to fix type inference issues where `courses` becomes `unknown`.
+        (Object.entries(semesterPlan) as [string, Course[]][]).forEach(([semester, courses]) => {
             const semesterConflicts = new Map<string, string[]>();
             for (let i = 0; i < courses.length; i++) {
                 for (let j = i + 1; j < courses.length; j++) {
@@ -188,7 +199,8 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Semester,Course ID,Title,Credits,Instructor,Sections\r\n";
 
-        Object.entries(semesterPlan).forEach(([semester, courses]) => {
+        // FIX: Cast Object.entries result to fix type inference issues where `courses` becomes `unknown`.
+        (Object.entries(semesterPlan) as [string, Course[]][]).forEach(([semester, courses]) => {
             courses.forEach(course => {
                 const sections = course.sections.map(s => `${s.type} ${s.time} @ ${s.location}`).join('; ');
                 const row = [semester, course.id, `"${course.title.replace(/"/g, '""')}"`, course.credits, `"${course.instructor.replace(/"/g, '""')}"`, `"${sections.replace(/"/g, '""')}"`].join(',');
