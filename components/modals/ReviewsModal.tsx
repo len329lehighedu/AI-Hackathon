@@ -1,22 +1,62 @@
 
-import React, { useState, useCallback } from 'react';
-import { Course, Review } from '../../types';
+import React, { useState, useCallback, useMemo } from 'react';
+import { Course, Review, ReviewRatings } from '../../types';
 import { summarizeReviews } from '../../services/geminiService';
+
+const WORKLOAD_EXPECTATION_MAP: { [key: number]: string } = {
+    1: 'Much Less than Expected',
+    2: 'Less than Expected',
+    3: 'As Expected',
+    4: 'More than Expected',
+    5: 'Much More than Expected',
+};
+
+const RatingInput: React.FC<{
+    label: string;
+    value: number;
+    onChange: (value: number) => void;
+    min?: number;
+    max?: number;
+    step?: number;
+    helpText?: string;
+    valueMap?: { [key: number]: string };
+}> = ({ label, value, onChange, min = 1, max = 5, step = 1, helpText, valueMap }) => (
+  <div>
+    <label className="block mb-1 text-brand-accent flex justify-between items-end">
+      <span>{label}</span>
+      <span className="font-bold text-brand-text text-sm">{valueMap ? valueMap[value] : `${value}/${max}`}</span>
+    </label>
+    {helpText && <p className="text-xs text-gray-500 -mt-1 mb-2">{helpText}</p>}
+    <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} className="w-full h-2 bg-brand-secondary rounded-lg appearance-none cursor-pointer accent-brand-primary" />
+  </div>
+);
 
 interface AddReviewFormProps {
   courseId: string;
-  onAddReview: (courseId: string, review: { rating: number; comment: string; author: string; date: string }) => void;
+  onAddReview: (courseId: string, review: { ratings: ReviewRatings; comment: string; author: string; date: string }) => void;
   onCancel: () => void;
 }
 
 const AddReviewForm: React.FC<AddReviewFormProps> = ({ courseId, onAddReview, onCancel }) => {
     const [step, setStep] = useState(1);
     const [verificationFile, setVerificationFile] = useState<File | null>(null);
-    const [rating, setRating] = useState(5);
+    const [ratings, setRatings] = useState<ReviewRatings>({
+        difficulty: 3,
+        workload: 8,
+        clarity: 3,
+        fairness: 3,
+        usefulness: 3,
+        engagement: 3,
+        workloadExpectation: 3,
+    });
     const [comment, setComment] = useState('');
     const [author, setAuthor] = useState('');
     const [isAnonymous, setIsAnonymous] = useState(false);
     const [error, setError] = useState('');
+
+    const handleRatingChange = (field: keyof ReviewRatings, value: number) => {
+        setRatings(prev => ({...prev, [field]: value}));
+    }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files && e.target.files[0]){
@@ -40,7 +80,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ courseId, onAddReview, on
             return;
         }
         onAddReview(courseId, {
-            rating,
+            ratings,
             comment,
             author: isAnonymous ? 'Anonymous' : author.trim(),
             date: new Date().toLocaleDateString('en-US')
@@ -65,16 +105,26 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ courseId, onAddReview, on
             )}
             {step === 2 && (
                 <div className="space-y-4">
-                    <input type="text" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Your Name (e.g., Jane D.)" className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary disabled:bg-gray-100" disabled={isAnonymous}/>
-                    <label className="flex items-center space-x-2 text-sm text-brand-accent">
-                      <input type="checkbox" checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} className="form-checkbox h-4 w-4 rounded bg-brand-surface border-brand-secondary text-brand-primary focus:ring-brand-primary"/>
-                      <span>Post anonymously</span>
-                    </label>
-                    <div>
-                        <label className="block mb-2 text-brand-accent">Rating: <span className="font-bold text-brand-text">{rating}/10</span></label>
-                        <input type="range" min="1" max="10" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-full"/>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <RatingInput label="Course Difficulty" value={ratings.difficulty} onChange={v => handleRatingChange('difficulty', v)} helpText="1=Easy, 5=Very Hard" />
+                        <RatingInput label="Professor Clarity" value={ratings.clarity} onChange={v => handleRatingChange('clarity', v)} helpText="How clear were lectures?" />
+                        <RatingInput label="Grading Fairness" value={ratings.fairness} onChange={v => handleRatingChange('fairness', v)} helpText="Were grades fair?" />
+                        <RatingInput label="Usefulness of Materials" value={ratings.usefulness} onChange={v => handleRatingChange('usefulness', v)} helpText="Textbooks, notes, etc." />
+                        <RatingInput label="Engagement / Participation" value={ratings.engagement} onChange={v => handleRatingChange('engagement', v)} helpText="How engaging was the class?" />
+                        <RatingInput label="Expected vs. Actual Workload" value={ratings.workloadExpectation} onChange={v => handleRatingChange('workloadExpectation', v)} valueMap={WORKLOAD_EXPECTATION_MAP} />
+                        <div className="md:col-span-2">
+                             <label className="block mb-1 text-brand-accent">Workload (hours/week): <span className="font-bold text-brand-text">{ratings.workload}</span></label>
+                            <input type="number" value={ratings.workload} onChange={e => handleRatingChange('workload', Number(e.target.value))} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary"/>
+                        </div>
                     </div>
-                    <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Your detailed review..." rows={4} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary"></textarea>
+                     <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Your detailed review..." rows={4} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary"></textarea>
+                    <div className="flex items-center gap-4">
+                       <input type="text" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Your Name (e.g., Jane D.)" className="flex-grow bg-brand-surface p-2 rounded-md border border-brand-secondary disabled:bg-gray-100" disabled={isAnonymous}/>
+                        <label className="flex items-center space-x-2 text-sm text-brand-accent">
+                          <input type="checkbox" checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} className="form-checkbox h-4 w-4 rounded bg-brand-surface border-brand-secondary text-brand-primary focus:ring-brand-primary"/>
+                          <span>Post anonymously</span>
+                        </label>
+                    </div>
                     <div className="flex justify-end space-x-2">
                          <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Back</button>
                         <button onClick={handleSubmit} className="px-4 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-opacity-90">Submit Review</button>
@@ -89,7 +139,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ courseId, onAddReview, on
 interface ReviewsModalProps {
   course: Course;
   onClose: () => void;
-  onAddReview: (courseId: string, review: { rating: number; comment: string; author: string; date: string }) => void;
+  onAddReview: (courseId: string, review: { ratings: ReviewRatings; comment: string; author: string; date: string }) => void;
   startWithAddReview?: boolean;
 }
 
@@ -112,11 +162,31 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
       </div>
     );
 
+    const averageRatings = useMemo(() => {
+        if (course.reviews.length === 0) return null;
+        const total = course.reviews.reduce((acc, review) => {
+            acc.clarity += review.ratings.clarity;
+            acc.fairness += review.ratings.fairness;
+            acc.usefulness += review.ratings.usefulness;
+            acc.engagement += review.ratings.engagement;
+            return acc;
+        }, { clarity: 0, fairness: 0, usefulness: 0, engagement: 0 });
+
+        const count = course.reviews.length;
+        const overall = (total.clarity + total.fairness + total.usefulness + total.engagement) / (count * 4);
+        return {
+            overall: overall.toFixed(1),
+        };
+    }, [course.reviews]);
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
             <div className="bg-brand-surface border border-brand-secondary rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                 <div className="flex justify-between items-center p-4 border-b border-brand-secondary">
-                    <h2 className="text-2xl font-bold text-brand-text">{course.id} (CRN: {course.crn}): {course.title}</h2>
+                    <div>
+                        <h2 className="text-2xl font-bold text-brand-text">{course.id} (CRN: {course.crn}): {course.title}</h2>
+                        {averageRatings && <p className="text-lg font-bold text-brand-primary">Overall Rating: {averageRatings.overall}/5.0</p>}
+                    </div>
                     <button onClick={onClose} className="text-2xl font-bold hover:text-brand-primary">&times;</button>
                 </div>
 
@@ -196,8 +266,16 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
                                       <p className="font-bold text-brand-text">{review.author}</p>
                                       <p className="text-sm text-brand-accent">{review.date}</p>
                                   </div>
-                                  <p className="font-bold text-brand-primary">Rating: {review.rating}/10</p>
-                                  <p className="mt-1 text-brand-accent">"{review.comment}"</p>
+                                  <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 mt-2 text-sm border-t border-brand-accent/20 pt-2">
+                                    <div><strong>Difficulty:</strong> {review.ratings.difficulty}/5</div>
+                                    <div><strong>Workload:</strong> {review.ratings.workload} hrs/wk</div>
+                                    <div><strong>Prof Clarity:</strong> {review.ratings.clarity}/5</div>
+                                    <div><strong>Fair Grading:</strong> {review.ratings.fairness}/5</div>
+                                    <div><strong>Materials:</strong> {review.ratings.usefulness}/5</div>
+                                    <div><strong>Engagement:</strong> {review.ratings.engagement}/5</div>
+                                    <div className="col-span-2 md:col-span-3"><strong>Workload Fit:</strong> {WORKLOAD_EXPECTATION_MAP[review.ratings.workloadExpectation]}</div>
+                                  </div>
+                                  <p className="mt-2 text-brand-accent italic">"{review.comment}"</p>
                               </div>
                           )) : (
                               !showAddReview && <p className="text-center text-brand-accent">No reviews yet. Be the first to add one!</p>

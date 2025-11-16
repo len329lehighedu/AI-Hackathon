@@ -20,8 +20,8 @@ export const ALL_COURSES: Course[] = [
       description: 'An introduction to programming using a high-level language. Topics include variables, control structures, functions, and data structures.',
       credits: 4, subject: 'Engineering',
       reviews: [
-        { id: 1, author: 'anonymous', rating: 8, comment: 'Great introductory course. Professor was very clear.', date: '2023-12-15' },
-        { id: 2, author: 'anonymous', rating: 6, comment: 'The homeworks were quite challenging for a beginner.', date: '2023-12-10' },
+        { id: 1, author: 'anonymous', ratings: { difficulty: 2, workload: 6, clarity: 5, fairness: 5, usefulness: 4, engagement: 4, workloadExpectation: 3 }, comment: 'Great introductory course. Professor was very clear.', date: '2023-12-15' },
+        { id: 2, author: 'anonymous', ratings: { difficulty: 3, workload: 10, clarity: 3, fairness: 4, usefulness: 3, engagement: 2, workloadExpectation: 4 }, comment: 'The homeworks were quite challenging for a beginner.', date: '2023-12-10' },
       ],
       sections: [
         { id: '10', type: 'Lecture', time: 'TTh 10:45 AM - 12:00 PM', location: 'Packard Lab 101', instructor: 'Dr. Sarah Johnson', enrolled: 145, capacity: 150 },
@@ -37,7 +37,7 @@ export const ALL_COURSES: Course[] = [
       description: 'In-depth study of object-oriented programming and fundamental data structures. Covers lists, stacks, queues, trees, and graphs.',
       credits: 3, subject: 'Engineering',
       reviews: [
-        { id: 3, author: 'anonymous', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
+        { id: 3, author: 'anonymous', ratings: { difficulty: 4, workload: 8, clarity: 5, fairness: 4, usefulness: 5, engagement: 5, workloadExpectation: 3 }, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
       ],
       sections: [
         { id: '10', type: 'Lecture', time: 'MWF 9:10 AM - 10:00 AM', location: 'Lewis Lab 316', instructor: 'Prof. Houria Oudghiri', enrolled: 88, capacity: 90 }
@@ -52,7 +52,7 @@ export const ALL_COURSES: Course[] = [
       description: 'Advanced programming and data structures, including dynamic structures, memory allocation, data organization, symbol tables, hash tables, B-trees, data files.',
       credits: 4, subject: 'Engineering',
       reviews: [
-        { id: 3, author: 'anonymous', rating: 9, comment: 'Taught me how to think like a programmer. Highly recommended.', date: '2024-05-10' },
+        { id: 3, author: 'anonymous', ratings: { difficulty: 5, workload: 12, clarity: 4, fairness: 4, usefulness: 5, engagement: 4, workloadExpectation: 4 }, comment: 'Very challenging but rewarding. Montella is a great professor.', date: '2024-05-10' },
       ],
       sections: [
          { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Packard Lab 101', instructor: 'Prof. Corey Montella', enrolled: 75, capacity: 75 },
@@ -98,7 +98,7 @@ export const ALL_COURSES: Course[] = [
       description: 'Covers linear algebra topics including vectors, matrices, determinants, eigenvalues, and eigenvectors.',
       credits: 3, subject: 'Math',
       reviews: [
-        { id: 4, author: 'Student D', rating: 7, comment: 'Very theoretical but essential for many upper-level courses.', date: '2023-12-20' },
+        { id: 4, author: 'Student D', ratings: { difficulty: 4, workload: 7, clarity: 3, fairness: 3, usefulness: 5, engagement: 2, workloadExpectation: 3 }, comment: 'Very theoretical but essential for many upper-level courses.', date: '2023-12-20' },
       ],
       sections: [
         { id: '10', type: 'Lecture', time: 'MWF 11:10 AM - 12:00 PM', location: 'Neville Hall 003', instructor: 'Prof. David Lee', enrolled: 60, capacity: 60 },
@@ -110,8 +110,8 @@ export const ALL_COURSES: Course[] = [
       description: 'A study of literary analysis and argumentative writing. Close reading of various genres.',
       credits: 3, subject: 'Humanities',
       reviews: [
-         { id: 5, author: 'Student E', rating: 10, comment: 'Amazing discussions in class. The reading list was fantastic.', date: '2024-05-12' },
-         { id: 6, author: 'Student F', rating: 8, comment: 'A lot of writing, but it definitely improves your skills.', date: '2024-05-09' },
+         { id: 5, author: 'Student E', ratings: { difficulty: 2, workload: 8, clarity: 5, fairness: 5, usefulness: 5, engagement: 5, workloadExpectation: 3 }, comment: 'Amazing discussions in class. The reading list was fantastic.', date: '2024-05-12' },
+         { id: 6, author: 'Student F', ratings: { difficulty: 3, workload: 9, clarity: 4, fairness: 4, usefulness: 4, engagement: 3, workloadExpectation: 4 }, comment: 'A lot of writing, but it definitely improves your skills.', date: '2024-05-09' },
       ],
       sections: [
         { id: '11', type: 'Lecture', time: 'TTh 9:20 AM - 10:35 AM', location: 'Drown Hall 101', instructor: 'Dr. Jessica Williams', enrolled: 22, capacity: 25 },
@@ -145,7 +145,7 @@ export const ALL_COURSES: Course[] = [
       description: 'Introduction to computer hardware and the interface between hardware and software. Topics include digital logic, processor design, memory hierarchy, and assembly language.',
       credits: 3, subject: 'Engineering',
       reviews: [
-         { id: 7, author: 'anonymous', rating: 8, comment: 'Might be literal vibe coding', date: '2025-10-18' },
+         { id: 7, author: 'anonymous', ratings: { difficulty: 3, workload: 5, clarity: 5, fairness: 5, usefulness: 4, engagement: 5, workloadExpectation: 2 }, comment: 'Might be literal vibe coding', date: '2025-10-18' },
       ],
       sections: [
         { id: '10', type: 'Lecture', time: 'MW 4:25 PM - 5:40 PM', location: 'Packard Lab 101', instructor: 'Prof. Mark Erle', enrolled: 70, capacity: 70 }
@@ -202,7 +202,7 @@ export const ALL_COURSES: Course[] = [
       description: 'A comprehensive introduction to the field of marketing. The course covers key marketing concepts, strategies, and practices, including market research, consumer behavior, product development, pricing, promotion, and distribution.',
       credits: 3, subject: 'Business',
       reviews: [
-        { id: 8, author: 'anonymous', rating: 9, comment: 'Great overview of marketing. Professor Clark is very engaging.', date: '2024-01-05' },
+        { id: 8, author: 'anonymous', ratings: { difficulty: 2, workload: 4, clarity: 5, fairness: 5, usefulness: 4, engagement: 4, workloadExpectation: 3 }, comment: 'Great overview of marketing. Professor Clark is very engaging.', date: '2024-01-05' },
       ],
       sections: [
         { id: '10', type: 'Lecture', time: 'TTh 1:35 PM - 2:50 PM', location: 'Rauch Business Ctr 085', instructor: 'Prof. David Clark', enrolled: 99, capacity: 100 }

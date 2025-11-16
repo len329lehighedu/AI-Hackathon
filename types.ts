@@ -1,7 +1,17 @@
+export interface ReviewRatings {
+  difficulty: number; // 1-5 (1=easy, 5=hard)
+  workload: number; // hours/week
+  clarity: number; // 1-5 (professor clarity)
+  fairness: number; // 1-5 (grading fairness)
+  usefulness: number; // 1-5 (materials)
+  engagement: number; // 1-5
+  workloadExpectation: number; // 1-5 (1=less, 3=expected, 5=more)
+}
+
 export interface Review {
   id: number;
   author: string;
-  rating: number; // 1-10
+  ratings: ReviewRatings;
   comment: string;
   date: string;
 }

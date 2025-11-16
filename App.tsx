@@ -6,7 +6,7 @@ import PlanAhead from './components/PlanAhead';
 import Evaluate from './components/Evaluate';
 import Login from './components/Login';
 import LiveChat from './components/LiveChat';
-import { Course, SemesterPlan } from './types';
+import { Course, SemesterPlan, ReviewRatings } from './types';
 import { ALL_COURSES } from './constants';
 
 export type View = 'catalog' | 'planner' | 'feedback';
@@ -58,7 +58,7 @@ const App: React.FC = () => {
     }));
   }, []);
   
-  const handleAddReview = (courseId: string, review: { rating: number; comment: string; author: string; date: string }) => {
+  const handleAddReview = (courseId: string, review: { ratings: ReviewRatings; comment: string; author: string; date: string }) => {
     setCourses(prevCourses => {
       return prevCourses.map(course => {
         if (course.id === courseId) {

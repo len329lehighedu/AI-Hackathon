@@ -19,10 +19,14 @@ export const summarizeReviews = async (reviews: Review[]): Promise<string> => {
     return "API Key not configured. Cannot summarize reviews.";
   }
 
-  const prompt = `Summarize the following student reviews for a university course. Focus on common themes, both positive and negative, regarding the professor, workload, and content. Provide a balanced overview in a few sentences.
+  const reviewsText = reviews.map(r => {
+    return `- Ratings (1-5 scale, 5=best, except difficulty where 5=hardest): Difficulty: ${r.ratings.difficulty}, Workload: ${r.ratings.workload} hrs/wk, Clarity: ${r.ratings.clarity}, Fairness: ${r.ratings.fairness}, Usefulness: ${r.ratings.usefulness}, Engagement: ${r.ratings.engagement}. Comment: "${r.comment}"`
+  }).join('\n');
+
+  const prompt = `Summarize the following student reviews for a university course. Focus on common themes, both positive and negative, regarding the professor's clarity, grading fairness, course difficulty, workload, and usefulness of materials. Provide a balanced overview in a few sentences.
 
 Reviews:
-${reviews.map(r => `- Rating: ${r.rating}/10. Comment: "${r.comment}"`).join('\n')}
+${reviewsText}
 `;
 
   try {

@@ -216,18 +216,27 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
         link.click();
         document.body.removeChild(link);
     };
+
+    const handleExportPDF = () => {
+        window.print();
+    };
     
     return (
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <h2 className="text-3xl font-bold text-brand-text text-center">Plan Your Academic Journey</h2>
-                <button onClick={handleExportCSV} className="px-4 py-2 bg-lehigh-green text-white text-sm font-semibold rounded-md hover:bg-green-700 transition-colors duration-200">
-                    Export as CSV
-                </button>
+                <div className="non-printable flex items-center gap-2">
+                    <button onClick={handleExportCSV} className="px-4 py-2 bg-lehigh-green text-white text-sm font-semibold rounded-md hover:bg-green-700 transition-colors duration-200">
+                        Export as CSV
+                    </button>
+                    <button onClick={handleExportPDF} className="px-4 py-2 bg-lehigh-red text-white text-sm font-semibold rounded-md hover:bg-red-700 transition-colors duration-200">
+                        Export as PDF
+                    </button>
+                </div>
             </div>
 
 
-            <div className="max-w-4xl mx-auto space-y-4">
+            <div className="max-w-4xl mx-auto space-y-4 non-printable">
                  <div>
                     <label htmlFor="major-select" className="block text-lg font-semibold text-brand-text mb-2">Track Major Requirements:</label>
                     <select
@@ -243,7 +252,7 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
                 {selectedMajor && <MajorRequirements selectedMajor={selectedMajor} plannedCourses={plannedCourses} />}
             </div>
 
-            <div>
+            <div className="non-printable">
                 <h3 className="text-2xl font-bold text-brand-text mb-4">Weekly Schedule</h3>
                 <div className="flex flex-wrap gap-2 mb-4">
                     {Object.keys(semesterPlan).map(semester => (
@@ -265,22 +274,25 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
 
             <div>
                 <h3 className="text-2xl font-bold text-brand-text mb-4">Semester Breakdown</h3>
-                <div className="overflow-x-auto pb-4">
-                     <div className="grid grid-flow-col auto-cols-[16rem] gap-4">
+                <div className="overflow-x-auto pb-4 printable-container">
+                     <div className="grid grid-flow-col auto-cols-[16rem] gap-4 printable-grid">
                         {Object.entries(semesterPlan).map(([semester, courses]) => (
-                            <SemesterColumn
-                                key={semester}
-                                semester={semester}
-                                courses={courses}
-                                onRemoveCourseFromPlan={onRemoveCourseFromPlan}
-                                conflicts={conflictsBySemester.get(semester)}
-                            />
+                            <div key={semester} className="printable-column">
+                                <SemesterColumn
+                                    semester={semester}
+                                    courses={courses}
+                                    onRemoveCourseFromPlan={onRemoveCourseFromPlan}
+                                    conflicts={conflictsBySemester.get(semester)}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
             </div>
             
-            <Chatbot allCourses={allCourses} majors={MAJORS} />
+            <div className="non-printable">
+                <Chatbot allCourses={allCourses} majors={MAJORS} />
+            </div>
         </div>
     );
 };
