@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Course, Major, SemesterPlan, Subject } from '../types';
 import { MAJORS, SUBJECTS } from '../constants';
@@ -9,16 +10,10 @@ interface FilterSidebarProps {
   setSelectedMajor: (major: string) => void;
   selectedSubjects: string[];
   setSelectedSubjects: (subjects: string[]) => void;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  instructorSearchTerm: string;
-  setInstructorSearchTerm: (term: string) => void;
-  crnSearchTerm: string;
-  setCrnSearchTerm: (term: string) => void;
 }
 
-const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects, searchTerm, setSearchTerm, instructorSearchTerm, setInstructorSearchTerm, crnSearchTerm, setCrnSearchTerm }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelectedMajor, selectedSubjects, setSelectedSubjects }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects(
@@ -29,10 +24,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
   };
   
   return (
-    <div className="bg-lehigh-brown/30 p-4 rounded-lg">
+    <div className="bg-brand-surface border border-brand-secondary p-4 rounded-lg">
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex justify-between items-center text-lg font-semibold text-lehigh-gold"
+        className="w-full flex justify-between items-center text-xl font-bold text-brand-primary"
         aria-expanded={isExpanded}
         aria-controls="filter-panel"
       >
@@ -51,52 +46,22 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ selectedMajor, setSelecte
       >
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Courses</h3>
-            <input 
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="e.g., CSE 109, Programming..."
-              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-            />
-          </div>
-           <div>
-            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search Instructor</h3>
-            <input 
-              type="text"
-              value={instructorSearchTerm}
-              onChange={(e) => setInstructorSearchTerm(e.target.value)}
-              placeholder="e.g., Johnson"
-              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Search by CRN</h3>
-            <input 
-              type="text"
-              value={crnSearchTerm}
-              onChange={(e) => setCrnSearchTerm(e.target.value)}
-              placeholder="e.g., 12345"
-              className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Major</h3>
-            <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold">
+            <h3 className="text-lg font-semibold text-brand-text mb-2">Filter by Major</h3>
+            <select value={selectedMajor} onChange={e => setSelectedMajor(e.target.value)} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary focus:ring-brand-primary focus:border-brand-primary">
               <option value="All">All Majors</option>
               {MAJORS.map(major => <option key={major.name} value={major.name}>{major.name}</option>)}
             </select>
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-lehigh-gold mb-2">Filter by Subject</h3>
-            <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+            <h3 className="text-lg font-semibold text-brand-text mb-2">Filter by Subject</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-x-4 gap-y-2">
               {SUBJECTS.map(subject => (
-                <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm">
+                <label key={subject} className="flex items-center space-x-1.5 cursor-pointer text-sm text-brand-accent hover:text-brand-text">
                   <input 
                     type="checkbox"
                     checked={selectedSubjects.includes(subject)}
                     onChange={() => handleSubjectChange(subject)}
-                    className="form-checkbox h-4 w-4 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"
+                    className="form-checkbox h-4 w-4 rounded bg-brand-surface border-brand-accent/50 text-brand-primary focus:ring-brand-primary"
                   />
                   <span>{subject}</span>
                 </label>
@@ -121,8 +86,6 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
   const [selectedMajor, setSelectedMajor] = useState('All');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [instructorSearchTerm, setInstructorSearchTerm] = useState('');
-  const [crnSearchTerm, setCrnSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [openDropdownCourseId, setOpenDropdownCourseId] = useState<string | null>(null);
 
@@ -153,23 +116,14 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
       const lowercasedTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(c => 
         c.id?.toLowerCase().includes(lowercasedTerm) || 
-        c.title?.toLowerCase().includes(lowercasedTerm)
+        c.title?.toLowerCase().includes(lowercasedTerm) ||
+        c.instructor?.toLowerCase().includes(lowercasedTerm) ||
+        c.crn?.includes(lowercasedTerm)
       );
-    }
-    
-    if (instructorSearchTerm.trim() !== '') {
-        const lowercasedTerm = instructorSearchTerm.toLowerCase();
-        filtered = filtered.filter(c => 
-            c.instructor?.toLowerCase().includes(lowercasedTerm)
-        );
-    }
-    
-    if (crnSearchTerm.trim() !== '') {
-        filtered = filtered.filter(c => c.crn?.includes(crnSearchTerm.trim()));
     }
 
     return filtered;
-  }, [courses, selectedMajor, selectedSubjects, searchTerm, instructorSearchTerm, crnSearchTerm]);
+  }, [courses, selectedMajor, selectedSubjects, searchTerm]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -179,15 +133,24 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
             setSelectedMajor={setSelectedMajor}
             selectedSubjects={selectedSubjects}
             setSelectedSubjects={setSelectedSubjects}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            instructorSearchTerm={instructorSearchTerm}
-            setInstructorSearchTerm={setInstructorSearchTerm}
-            crnSearchTerm={crnSearchTerm}
-            setCrnSearchTerm={setCrnSearchTerm}
         />
       </div>
       <div className="lg:col-span-3">
+        <h2 className="text-4xl font-bold text-brand-text mb-2">Course Catalog</h2>
+        <p className="text-brand-accent mb-6">Browse and search for courses to plan your academic journey</p>
+        <div className="relative mb-6">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-accent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
+            <input 
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by course ID, title, instructor, or CRN..."
+              className="w-full bg-brand-surface p-3 pl-10 rounded-lg border border-brand-secondary focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
+            />
+        </div>
+
         {filteredCourses.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredCourses.map(course => (
@@ -203,8 +166,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ courses, onAddCourseToPla
             ))}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-64 bg-lehigh-brown/30 rounded-lg">
-              <p className="text-lehigh-light-gold text-xl">No courses match your criteria.</p>
+          <div className="flex items-center justify-center h-64 bg-brand-secondary/50 rounded-lg">
+              <p className="text-brand-accent text-xl">No courses match your criteria.</p>
           </div>
         )}
       </div>

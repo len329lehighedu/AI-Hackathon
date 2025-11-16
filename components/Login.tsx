@@ -20,12 +20,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-lehigh-dark-brown">
-      <div className="w-full max-w-md p-8 space-y-8 bg-lehigh-darker-brown rounded-lg shadow-2xl border border-lehigh-light-gold/20">
+    <div className="flex items-center justify-center min-h-screen bg-brand-bg">
+      <div className="w-full max-w-md p-8 space-y-8 bg-brand-surface rounded-lg shadow-xl border border-brand-secondary">
         <div className="flex flex-col items-center">
           <img src="https://image2url.com/images/1763230135301-08ad8a08-f02f-4835-92a9-14af60f15d53.png" alt="Lehigh University Logo" className="h-16 w-auto mb-4" />
-          <h1 className="text-3xl font-bold text-center text-white">Lehigh Course Planner</h1>
-          <p className="mt-2 text-center text-white">Please log in with your Lehigh email.</p>
+          <h1 className="text-3xl font-bold text-center text-brand-text">Lehigh Course Planner</h1>
+          <p className="mt-2 text-center text-brand-accent">Please log in with your Lehigh email.</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
@@ -38,7 +38,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="appearance-none rounded-md relative block w-full px-3 py-3 border border-lehigh-light-gold bg-white text-lehigh-dark-brown placeholder-gray-500 focus:outline-none focus:ring-lehigh-gold focus:border-lehigh-gold focus:z-10 sm:text-sm"
+              className="appearance-none rounded-md relative block w-full px-3 py-3 border border-brand-secondary bg-white text-brand-text placeholder-gray-500 focus:outline-none focus:ring-brand-primary focus:border-brand-primary focus:z-10 sm:text-sm"
               placeholder="Email address (e.g., hawk@lehigh.edu)"
             />
           </div>
@@ -48,7 +48,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-lehigh-dark-brown bg-lehigh-gold hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-lehigh-dark-brown focus:ring-lehigh-gold transition-colors duration-300"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-brand-surface focus:ring-brand-primary transition-colors duration-300"
             >
               Login
             </button>

@@ -7,22 +7,22 @@ interface ScheduleVisualizerProps {
 }
 
 const DAYS = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
-const TIME_LABELS = Array.from({ length: 24 }, (_, i) => {
-    const hour = i % 12 === 0 ? 12 : i % 12;
-    const ampm = i < 12 ? 'AM' : 'PM';
+const TIME_LABELS = Array.from({ length: 15 }, (_, i) => {
+    const hour = (i + 7) % 12 === 0 ? 12 : (i + 7) % 12;
+    const ampm = (i + 7) < 12 || (i + 7) === 24 ? 'AM' : 'PM';
     return `${hour} ${ampm}`;
 });
-const START_HOUR = 0;
+const START_HOUR = 7; // Start grid at 7 AM
 
 const COURSE_COLORS = [
-    'bg-lehigh-gold/80 border-lehigh-gold',
-    'bg-lehigh-red/80 border-lehigh-red',
-    'bg-lehigh-green/80 border-lehigh-green',
-    'bg-blue-500/80 border-blue-500',
-    'bg-indigo-500/80 border-indigo-500',
-    'bg-purple-500/80 border-purple-500',
-    'bg-pink-500/80 border-pink-500',
-    'bg-teal-500/80 border-teal-500',
+    'bg-amber-200 border-amber-400 text-amber-800',
+    'bg-sky-200 border-sky-400 text-sky-800',
+    'bg-emerald-200 border-emerald-400 text-emerald-800',
+    'bg-rose-200 border-rose-400 text-rose-800',
+    'bg-indigo-200 border-indigo-400 text-indigo-800',
+    'bg-fuchsia-200 border-fuchsia-400 text-fuchsia-800',
+    'bg-lime-200 border-lime-400 text-lime-800',
+    'bg-cyan-200 border-cyan-400 text-cyan-800',
 ];
 
 const parseTime = (timeStr: string) => {
@@ -46,15 +46,16 @@ const parseTime = (timeStr: string) => {
 
     const parseTime12hr = (t: string) => {
         const isPM = t.toUpperCase().includes('PM');
-        const [hour, minute] = t.replace(/AM|PM/i, '').trim().split(':').map(Number);
-        let finalHour = hour;
+        let [hour, minute] = t.replace(/AM|PM/i, '').trim().split(':').map(Number);
+        minute = minute || 0;
+        
         if (isPM && hour < 12) {
-            finalHour += 12;
+            hour += 12;
         }
         if (!isPM && hour === 12) { // 12 AM (midnight)
-            finalHour = 0;
+            hour = 0;
         }
-        return finalHour * 60 + (minute || 0);
+        return hour * 60 + minute;
     };
 
     const startMinutes = parseTime12hr(startTimeStr);
@@ -81,27 +82,27 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
     ).flat();
 
     return (
-        <div className="bg-lehigh-darker-brown p-4 rounded-lg overflow-x-auto">
+        <div className="bg-brand-surface p-4 rounded-lg overflow-x-auto border border-brand-secondary">
             <div className="grid grid-cols-[auto_repeat(7,minmax(0,1fr))] min-w-[900px]">
                 {/* Headers */}
-                <div className="sticky left-0 bg-lehigh-darker-brown z-10"></div>
+                <div className="sticky left-0 bg-brand-surface z-10"></div>
                 {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => (
-                    <div key={day} className="text-center font-bold text-lehigh-gold pb-2">{day}</div>
+                    <div key={day} className="text-center font-bold text-brand-text pb-2">{day}</div>
                 ))}
 
                 {/* Grid layout */}
-                <div className="row-span-1 col-start-1 col-end-2 grid grid-rows-24">
+                <div className="row-span-1 col-start-1 col-end-2 grid" style={{ gridTemplateRows: `repeat(${TIME_LABELS.length}, 3rem)` }}>
                     {TIME_LABELS.map(time => (
-                         <div key={time} className="text-right pr-2 text-xs text-lehigh-light-gold h-12 border-t border-lehigh-brown/50 pt-1">{time}</div>
+                         <div key={time} className="text-right pr-2 text-xs text-brand-accent h-12 border-t border-brand-secondary pt-1 -mt-px">{time}</div>
                     ))}
                 </div>
                 <div 
-                    className="col-start-2 col-end-9 grid grid-cols-7 grid-rows-24 relative"
-                    style={{ backgroundSize: '1px 3rem', backgroundImage: 'linear-gradient(to bottom, transparent 2.95rem, rgba(147, 112, 219, 0.1) 2.95rem)'}}
+                    className="col-start-2 col-end-9 grid grid-cols-7 relative"
+                     style={{ gridTemplateRows: `repeat(${TIME_LABELS.length}, 3rem)`, backgroundSize: '1px 3rem', backgroundImage: 'linear-gradient(to bottom, transparent 2.95rem, #EFEBE6 2.95rem)'}}
                 >
                    {/* Dotted lines for days */}
                    {[...Array(6)].map((_, i) => (
-                       <div key={i} className="h-full border-r border-dashed border-lehigh-brown/50" style={{ gridColumn: `${i+1} / span 1`, gridRow: '1 / -1' }}></div>
+                       <div key={i} className="h-full border-r border-dashed border-brand-secondary" style={{ gridColumn: `${i+2} / span 1`, gridRow: '1 / -1' }}></div>
                    ))}
 
                    {/* Course Events */}
@@ -110,12 +111,12 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
                        const height = ((event.endMinutes - event.startMinutes) / 60) * 3;
                        const dayIndex = DAYS.indexOf(event.day);
 
-                       if (dayIndex === -1) return null;
+                       if (dayIndex === -1 || height <= 0) return null;
 
                        return (
                            <div
                                 key={event.id}
-                                className={`absolute w-full p-2 rounded-lg text-white text-xs overflow-hidden border ${event.color} select-none`}
+                                className={`absolute w-full p-1.5 rounded-lg text-xs overflow-hidden border ${event.color} select-none`}
                                 style={{
                                     top: `${top}rem`,
                                     height: `${height}rem`,
@@ -125,7 +126,7 @@ const ScheduleVisualizer: React.FC<ScheduleVisualizerProps> = ({ courses }) => {
                            >
                                <p className="font-bold">{event.course.id}</p>
                                <p className="truncate">{event.course.title}</p>
-                               <p className="text-lehigh-gold/90">{event.section.type}</p>
+                               <p className="font-semibold">{event.section.type}</p>
                            </div>
                        );
                    })}

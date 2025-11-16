@@ -5,6 +5,7 @@ import CourseCatalog from './components/CourseCatalog';
 import PlanAhead from './components/PlanAhead';
 import Evaluate from './components/Evaluate';
 import Login from './components/Login';
+import LiveChat from './components/LiveChat';
 import { Course, SemesterPlan } from './types';
 import { ALL_COURSES } from './constants';
 
@@ -74,13 +75,14 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-lehigh-dark-brown min-h-screen font-sans text-white">
+    <div className="bg-brand-bg min-h-screen font-sans text-brand-text">
       <Header currentView={currentView} setCurrentView={setCurrentView} userEmail={userEmail} onLogout={handleLogout} />
       <main className="p-4 sm:p-6 lg:p-8">
         {currentView === 'catalog' && <CourseCatalog courses={courses} onAddCourseToPlan={handleAddCourseToPlan} semesterPlan={semesterPlan} onAddReview={handleAddReview} />}
         {currentView === 'planner' && <PlanAhead semesterPlan={semesterPlan} onRemoveCourseFromPlan={handleRemoveCourseFromPlan} onAddCourseToPlan={handleAddCourseToPlan} allCourses={courses} />}
         {currentView === 'feedback' && <Evaluate courses={courses} onAddReview={handleAddReview} />}
       </main>
+      <LiveChat />
     </div>
   );
 };

@@ -14,10 +14,10 @@ interface PlannedCourseCardProps {
 }
 
 const PlannedCourseCard: React.FC<PlannedCourseCardProps> = ({ course, semester, onRemove, isConflicting, conflictText }) => (
-    <div className={`bg-white p-3 rounded-lg shadow flex justify-between items-center text-lehigh-dark-brown select-none transition-all duration-300 ${isConflicting ? 'border-2 border-lehigh-red' : ''}`} title={conflictText}>
+    <div className={`bg-brand-surface p-3 rounded-lg shadow-sm flex justify-between items-center text-brand-text select-none transition-all duration-300 ${isConflicting ? 'ring-2 ring-lehigh-red' : 'border border-brand-secondary'}`} title={conflictText}>
         <div>
             <p className="font-bold">{course.id}</p>
-            <p className="text-sm text-gray-600">{course.title}</p>
+            <p className="text-sm text-brand-accent">{course.title}</p>
         </div>
         <div className="flex items-center space-x-2">
             {isConflicting && <span className="text-lehigh-red text-xl font-bold" title={conflictText}>!</span>}
@@ -40,10 +40,10 @@ const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRe
     const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
 
     return (
-        <div className="bg-lehigh-darker-brown rounded-lg p-4 flex flex-col h-full">
-            <h3 className="text-lg font-bold text-lehigh-gold mb-3 text-center flex items-center justify-center">
+        <div className="bg-brand-surface rounded-lg p-4 flex flex-col h-full border border-brand-secondary">
+            <h3 className="text-lg font-bold text-brand-text mb-3 text-center flex items-center justify-center">
                 {semester}
-                {conflicts && conflicts.size > 0 && <span className="ml-2 text-red-400" title="Time conflict detected!">⚠️</span>}
+                {conflicts && conflicts.size > 0 && <span className="ml-2 text-red-500" title="Time conflict detected!">⚠️</span>}
             </h3>
             <div className="space-y-3 flex-grow overflow-y-auto pr-1">
                 {courses.length > 0 ? (
@@ -64,11 +64,11 @@ const SemesterColumn: React.FC<SemesterColumnProps> = ({ semester, courses, onRe
                         )
                     })
                 ) : (
-                    <p className="text-center text-sm text-lehigh-light-gold/70 pt-4">No courses planned.</p>
+                    <p className="text-center text-sm text-brand-accent pt-4">No courses planned.</p>
                 )}
             </div>
-            <div className="border-t border-lehigh-brown mt-3 pt-3 text-center">
-                <p className="font-bold text-white">Total Credits: {totalCredits}</p>
+            <div className="border-t border-brand-secondary mt-3 pt-3 text-center">
+                <p className="font-bold text-brand-text">Total Credits: {totalCredits}</p>
             </div>
         </div>
     );
@@ -90,19 +90,19 @@ const MajorRequirements: React.FC<MajorRequirementsProps> = ({ selectedMajor, pl
     const remainingCourses = requiredCourses.filter(id => !plannedCourseIds.has(id));
 
     return (
-        <div className="bg-lehigh-brown/30 p-4 rounded-lg select-none">
-            <h3 className="text-xl font-bold text-lehigh-gold mb-4">Requirements for {selectedMajor.name}</h3>
+        <div className="bg-brand-surface border border-brand-secondary p-4 rounded-lg select-none">
+            <h3 className="text-xl font-bold text-brand-text mb-4">Requirements for {selectedMajor.name}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <h4 className="font-semibold text-lehigh-light-gold mb-2">Completed ({completedCourses.length}/{requiredCourses.length})</h4>
+                    <h4 className="font-semibold text-brand-accent mb-2">Completed ({completedCourses.length}/{requiredCourses.length})</h4>
                     <ul className="list-disc list-inside text-sm space-y-1">
-                        {completedCourses.length > 0 ? completedCourses.map(id => <li key={id} className="text-green-300">{id}</li>) : <li className="text-gray-400">None</li>}
+                        {completedCourses.length > 0 ? completedCourses.map(id => <li key={id} className="text-green-600">{id}</li>) : <li className="text-gray-500">None</li>}
                     </ul>
                 </div>
                 <div>
-                    <h4 className="font-semibold text-lehigh-light-gold mb-2">Remaining</h4>
+                    <h4 className="font-semibold text-brand-accent mb-2">Remaining</h4>
                      <ul className="list-disc list-inside text-sm space-y-1">
-                        {remainingCourses.length > 0 ? remainingCourses.map(id => <li key={id} className="text-yellow-300">{id}</li>) : <li className="text-gray-400">All requirements met!</li>}
+                        {remainingCourses.length > 0 ? remainingCourses.map(id => <li key={id} className="text-yellow-600">{id}</li>) : <li className="text-gray-400">All requirements met!</li>}
                     </ul>
                 </div>
             </div>
@@ -207,8 +207,8 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
     
     return (
         <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <h2 className="text-3xl font-bold text-lehigh-gold text-center">Plan Your Academic Journey</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h2 className="text-3xl font-bold text-brand-text text-center">Plan Your Academic Journey</h2>
                 <button onClick={handleExportCSV} className="px-4 py-2 bg-lehigh-green text-white text-sm font-semibold rounded-md hover:bg-green-700 transition-colors duration-200">
                     Export as CSV
                 </button>
@@ -217,12 +217,12 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
 
             <div className="max-w-4xl mx-auto space-y-4">
                  <div>
-                    <label htmlFor="major-select" className="block text-lg font-semibold text-lehigh-gold mb-2">Track Major Requirements:</label>
+                    <label htmlFor="major-select" className="block text-lg font-semibold text-brand-text mb-2">Track Major Requirements:</label>
                     <select
                         id="major-select"
                         value={selectedMajorName}
                         onChange={e => setSelectedMajorName(e.target.value)}
-                        className="w-full max-w-md bg-lehigh-dark-brown p-2 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold"
+                        className="w-full max-w-md bg-brand-surface p-2 rounded-md border border-brand-secondary focus:ring-brand-primary focus:border-brand-primary"
                     >
                         <option value="None">-- Select a Major --</option>
                         {MAJORS.map(major => <option key={major.name} value={major.name}>{major.name}</option>)}
@@ -232,7 +232,7 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
             </div>
 
             <div>
-                <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Weekly Schedule</h3>
+                <h3 className="text-2xl font-bold text-brand-text mb-4">Weekly Schedule</h3>
                 <div className="flex flex-wrap gap-2 mb-4">
                     {Object.keys(semesterPlan).map(semester => (
                         <button
@@ -240,8 +240,8 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
                             onClick={() => setSelectedSemesterTab(semester)}
                             className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors duration-200 ${
                                 selectedSemesterTab === semester
-                                    ? 'bg-lehigh-gold text-lehigh-dark-brown'
-                                    : 'bg-lehigh-brown hover:bg-lehigh-light-gold hover:text-lehigh-dark-brown'
+                                    ? 'bg-brand-primary text-white'
+                                    : 'bg-brand-surface text-brand-text hover:bg-brand-secondary'
                             }`}
                         >
                             {semester}
@@ -252,7 +252,7 @@ const PlanAhead: React.FC<PlanAheadProps> = ({ semesterPlan, onRemoveCourseFromP
             </div>
 
             <div>
-                <h3 className="text-2xl font-bold text-lehigh-gold mb-4">Semester Breakdown</h3>
+                <h3 className="text-2xl font-bold text-brand-text mb-4">Semester Breakdown</h3>
                 <div className="overflow-x-auto pb-4">
                      <div className="grid grid-flow-col auto-cols-[16rem] gap-4">
                         {Object.entries(semesterPlan).map(([semester, courses]) => (

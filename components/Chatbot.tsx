@@ -66,7 +66,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses, majors }) => {
         <>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 bg-lehigh-gold text-lehigh-dark-brown p-3 sm:p-4 rounded-full shadow-lg hover:bg-yellow-500 transition-transform transform hover:scale-110 z-50"
+                className="fixed bottom-6 right-6 bg-brand-primary text-white p-3 sm:p-4 rounded-full shadow-lg hover:bg-opacity-90 transition-transform transform hover:scale-110 z-50"
                 aria-label="Toggle course assistant chatbot"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,7 +76,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses, majors }) => {
 
             {isOpen && (
                 <div
-                    className="fixed bottom-24 right-6 bg-lehigh-darker-brown rounded-lg shadow-2xl flex flex-col z-50 border-2 border-lehigh-light-gold"
+                    className="fixed bottom-24 right-6 bg-brand-surface rounded-lg shadow-2xl flex flex-col z-50 border border-brand-secondary"
                     style={{
                         resize: 'both',
                         overflow: 'auto',
@@ -88,31 +88,31 @@ const Chatbot: React.FC<ChatbotProps> = ({ allCourses, majors }) => {
                         maxHeight: '80vh',
                     }}
                 >
-                    <header className="bg-lehigh-brown p-4 text-white font-bold text-lg flex justify-between items-center rounded-t-md sticky top-0 z-10">
+                    <header className="bg-brand-secondary/50 p-4 text-brand-text font-bold text-lg flex justify-between items-center rounded-t-md sticky top-0 z-10">
                         AI Course Assistant
-                        <button onClick={() => setIsOpen(false)} className="text-2xl">&times;</button>
+                        <button onClick={() => setIsOpen(false)} className="text-2xl hover:text-brand-primary">&times;</button>
                     </header>
-                    <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                    <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-brand-bg">
                         {messages.map((msg, index) => (
                             <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`p-3 rounded-lg max-w-xs ${msg.sender === 'user' ? 'bg-lehigh-gold text-lehigh-dark-brown' : 'bg-lehigh-brown text-white'}`}>
+                                <div className={`p-3 rounded-lg max-w-xs ${msg.sender === 'user' ? 'bg-brand-primary text-white' : 'bg-white text-brand-text shadow-sm'}`}>
                                     {msg.text || <span className="animate-pulse">...</span>}
                                 </div>
                             </div>
                         ))}
                          <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-4 border-t border-lehigh-brown flex items-center sticky bottom-0 bg-lehigh-darker-brown">
+                    <div className="p-4 border-t border-brand-secondary flex items-center sticky bottom-0 bg-brand-surface">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                             placeholder="Ask about courses..."
-                            className="flex-1 bg-lehigh-dark-brown p-2 rounded-l-md border-y border-l border-lehigh-light-gold focus:outline-none focus:ring-2 focus:ring-lehigh-gold"
+                            className="flex-1 bg-white p-2 rounded-l-md border border-r-0 border-brand-secondary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                             disabled={isLoading}
                         />
-                        <button onClick={handleSendMessage} className="bg-lehigh-gold text-lehigh-dark-brown p-2 rounded-r-md font-bold hover:bg-yellow-500 disabled:bg-gray-500" disabled={isLoading}>
+                        <button onClick={handleSendMessage} className="bg-brand-primary text-white p-2 rounded-r-md font-bold hover:bg-opacity-90 disabled:bg-gray-400" disabled={isLoading}>
                             Send
                         </button>
                     </div>

@@ -49,35 +49,35 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({ courseId, onAddReview, on
     };
 
     return (
-        <div className="bg-lehigh-dark-brown p-6 rounded-lg my-4 border border-lehigh-brown">
-            <h4 className="text-xl font-bold text-lehigh-gold mb-4">Add Your Review</h4>
-            {error && <p className="text-red-400 mb-4">{error}</p>}
+        <div className="bg-brand-bg p-6 rounded-lg my-4 border border-brand-secondary">
+            <h4 className="text-xl font-bold text-brand-text mb-4">Add Your Review</h4>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
             {step === 1 && (
                 <div>
-                    <p className="mb-2 text-lehigh-light-gold">To ensure review quality, please verify you've taken this course.</p>
-                    <p className="text-xs text-gray-400 mb-4">(This is a simulation. You can upload any file.)</p>
-                    <input type="file" onChange={handleFileChange} className="mb-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-lehigh-gold file:text-lehigh-dark-brown hover:file:bg-yellow-500"/>
+                    <p className="mb-2 text-brand-accent">To ensure review quality, please verify you've taken this course.</p>
+                    <p className="text-xs text-gray-500 mb-4">(This is a simulation. You can upload any file.)</p>
+                    <input type="file" onChange={handleFileChange} className="mb-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-white hover:file:bg-opacity-90"/>
                     <div className="flex justify-end space-x-2">
-                        <button onClick={onCancel} className="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500">Cancel</button>
-                        <button onClick={handleVerify} className="px-4 py-2 bg-lehigh-gold text-lehigh-dark-brown font-semibold rounded-md hover:bg-yellow-500">Verify & Continue</button>
+                        <button onClick={onCancel} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button>
+                        <button onClick={handleVerify} className="px-4 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-opacity-90">Verify & Continue</button>
                     </div>
                 </div>
             )}
             {step === 2 && (
                 <div className="space-y-4">
-                    <input type="text" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Your Name (e.g., Jane D.)" className="w-full bg-gray-800 p-2 rounded-md border border-lehigh-light-gold disabled:bg-gray-700" disabled={isAnonymous}/>
-                    <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} className="form-checkbox h-4 w-4 rounded bg-lehigh-dark-brown border-lehigh-light-gold text-lehigh-gold focus:ring-lehigh-gold"/>
+                    <input type="text" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Your Name (e.g., Jane D.)" className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary disabled:bg-gray-100" disabled={isAnonymous}/>
+                    <label className="flex items-center space-x-2 text-sm text-brand-accent">
+                      <input type="checkbox" checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} className="form-checkbox h-4 w-4 rounded bg-brand-surface border-brand-secondary text-brand-primary focus:ring-brand-primary"/>
                       <span>Post anonymously</span>
                     </label>
                     <div>
-                        <label className="block mb-2">Rating: <span className="font-bold text-lehigh-gold">{rating}/10</span></label>
+                        <label className="block mb-2 text-brand-accent">Rating: <span className="font-bold text-brand-text">{rating}/10</span></label>
                         <input type="range" min="1" max="10" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-full"/>
                     </div>
-                    <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Your detailed review..." rows={4} className="w-full bg-gray-800 p-2 rounded-md border border-lehigh-light-gold"></textarea>
+                    <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Your detailed review..." rows={4} className="w-full bg-brand-surface p-2 rounded-md border border-brand-secondary"></textarea>
                     <div className="flex justify-end space-x-2">
-                         <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500">Back</button>
-                        <button onClick={handleSubmit} className="px-4 py-2 bg-lehigh-gold text-lehigh-dark-brown font-semibold rounded-md hover:bg-yellow-500">Submit Review</button>
+                         <button onClick={() => setStep(1)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Back</button>
+                        <button onClick={handleSubmit} className="px-4 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-opacity-90">Submit Review</button>
                     </div>
                 </div>
             )}
@@ -107,30 +107,30 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
     
     const DetailItem: React.FC<{label: string; children: React.ReactNode}> = ({label, children}) => (
       <div>
-        <p className="font-semibold text-lehigh-light-gold">{label}</p>
-        <div className="text-white pl-2">{children}</div>
+        <p className="font-semibold text-brand-accent">{label}</p>
+        <div className="text-brand-text pl-2">{children}</div>
       </div>
     );
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-lehigh-dark-brown border border-lehigh-light-gold rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-                <div className="flex justify-between items-center p-4 border-b border-lehigh-brown">
-                    <h2 className="text-2xl font-bold text-lehigh-gold">{course.id} (CRN: {course.crn}): {course.title}</h2>
-                    <button onClick={onClose} className="text-2xl font-bold hover:text-lehigh-gold">&times;</button>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+            <div className="bg-brand-surface border border-brand-secondary rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                <div className="flex justify-between items-center p-4 border-b border-brand-secondary">
+                    <h2 className="text-2xl font-bold text-brand-text">{course.id} (CRN: {course.crn}): {course.title}</h2>
+                    <button onClick={onClose} className="text-2xl font-bold hover:text-brand-primary">&times;</button>
                 </div>
 
                 <div className="p-6 overflow-y-auto space-y-6">
                     {/* Course Details */}
                     <div className="space-y-3">
                       <DetailItem label="Instructor">
-                        <p>{course.instructor} {course.instructorContact && <a href={`mailto:${course.instructorContact}`} className="text-lehigh-gold hover:underline">({course.instructorContact})</a>}</p>
+                        <p>{course.instructor} {course.instructorContact && <a href={`mailto:${course.instructorContact}`} className="text-brand-primary hover:underline">({course.instructorContact})</a>}</p>
                       </DetailItem>
                       {course.prerequisites.length > 0 && <DetailItem label="Prerequisites"><p>{course.prerequisites.join(', ')}</p></DetailItem>}
                       {course.materials.length > 0 && 
                         <DetailItem label="Required Materials">
                           <ul className="list-disc list-inside">
-                            {course.materials.map(m => <li key={m.name}>{m.link ? <a href={m.link} target="_blank" rel="noopener noreferrer" className="text-lehigh-gold hover:underline">{m.name}</a> : m.name}</li>)}
+                            {course.materials.map(m => <li key={m.name}>{m.link ? <a href={m.link} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">{m.name}</a> : m.name}</li>)}
                           </ul>
                         </DetailItem>
                       }
@@ -139,15 +139,15 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
                     {/* Sections */}
                     {course.sections.length > 0 && (
                       <div>
-                        <h3 className="text-xl font-bold text-lehigh-gold mb-2 border-t border-lehigh-brown pt-4">Sections</h3>
+                        <h3 className="text-xl font-bold text-brand-text mb-2 border-t border-brand-secondary pt-4">Sections</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {course.sections.map(sec => (
-                            <div key={sec.id} className="bg-lehigh-brown/30 p-3 rounded-md">
+                            <div key={sec.id} className="bg-brand-secondary/50 p-3 rounded-md">
                               <p className="font-bold">{sec.type} (Section {sec.id})</p>
                               <p className="text-sm">{sec.time}</p>
                               <p className="text-sm">{sec.location}</p>
                               <p className="text-sm">Instructor: {sec.instructor}</p>
-                              <p className="text-sm font-medium text-white flex items-center">
+                              <p className="text-sm font-medium text-brand-text flex items-center">
                                   Enrollment: {sec.enrolled} / {sec.capacity}
                                   <span 
                                     className={`ml-2 inline-block h-3 w-3 rounded-full ${sec.enrolled >= sec.capacity ? 'bg-red-500' : (sec.enrolled / sec.capacity > 0.85 ? 'bg-yellow-400' : 'bg-green-500')}`}
@@ -161,13 +161,13 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
                     )}
                     
                     {/* Reviews Section */}
-                    <div className="border-t border-lehigh-brown pt-4">
-                      <h3 className="text-xl font-bold text-lehigh-gold mb-4">Student Reviews</h3>
+                    <div className="border-t border-brand-secondary pt-4">
+                      <h3 className="text-xl font-bold text-brand-text mb-4">Student Reviews</h3>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
-                          <button onClick={() => setShowAddReview(true)} disabled={showAddReview} className="px-4 py-2 bg-lehigh-gold text-lehigh-dark-brown font-semibold rounded-md hover:bg-yellow-500 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                          <button onClick={() => setShowAddReview(true)} disabled={showAddReview} className="px-4 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
                               Add a Review
                           </button>
-                           <button onClick={handleGetSummary} disabled={isSummarizing || course.reviews.length === 0} className="px-4 py-2 bg-lehigh-green text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center gap-2 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                           <button onClick={handleGetSummary} disabled={isSummarizing || course.reviews.length === 0} className="px-4 py-2 bg-lehigh-green text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
                                {isSummarizing ? (
                                   <>
                                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -183,24 +183,24 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ course, onClose, onAddRevie
                       {showAddReview && <AddReviewForm courseId={course.id} onAddReview={onAddReview} onCancel={() => setShowAddReview(false)}/>}
                       
                       {aiSummary && (
-                          <div className="bg-lehigh-brown/30 p-4 rounded-lg my-4">
-                              <h4 className="font-bold text-lehigh-gold mb-2">AI Summary</h4>
-                              <p className="text-sm text-white italic">{aiSummary}</p>
+                          <div className="bg-brand-secondary/50 p-4 rounded-lg my-4">
+                              <h4 className="font-bold text-brand-text mb-2">AI Summary</h4>
+                              <p className="text-sm text-brand-text italic">{aiSummary}</p>
                           </div>
                       )}
                       
                       <div className="space-y-4 mt-4">
                           {course.reviews.length > 0 ? course.reviews.map(review => (
-                              <div key={review.id} className="bg-lehigh-brown/30 p-4 rounded-lg">
+                              <div key={review.id} className="bg-brand-secondary/50 p-4 rounded-lg">
                                   <div className="flex justify-between items-center mb-2">
-                                      <p className="font-bold">{review.author}</p>
-                                      <p className="text-sm text-lehigh-light-gold">{review.date}</p>
+                                      <p className="font-bold text-brand-text">{review.author}</p>
+                                      <p className="text-sm text-brand-accent">{review.date}</p>
                                   </div>
-                                  <p className="font-bold text-lehigh-gold">Rating: {review.rating}/10</p>
-                                  <p className="mt-1 text-gray-300">"{review.comment}"</p>
+                                  <p className="font-bold text-brand-primary">Rating: {review.rating}/10</p>
+                                  <p className="mt-1 text-brand-accent">"{review.comment}"</p>
                               </div>
                           )) : (
-                              !showAddReview && <p className="text-center text-lehigh-light-gold">No reviews yet. Be the first to add one!</p>
+                              !showAddReview && <p className="text-center text-brand-accent">No reviews yet. Be the first to add one!</p>
                           )}
                       </div>
                     </div>

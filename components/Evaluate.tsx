@@ -9,14 +9,14 @@ interface EvaluationCourseCardProps {
 }
 
 const EvaluationCourseCard: React.FC<EvaluationCourseCardProps> = ({ course, onWriteReview }) => (
-    <div className="bg-lehigh-brown/50 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center gap-4 select-none">
+    <div className="bg-brand-surface border border-brand-secondary p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center gap-4 select-none">
         <div>
-            <h3 className="font-bold text-lehigh-gold">{course.id}: {course.title}</h3>
-            <p className="text-sm text-lehigh-light-gold">Instructor: {course.instructor}</p>
+            <h3 className="font-bold text-brand-text">{course.id}: {course.title}</h3>
+            <p className="text-sm text-brand-accent">Instructor: {course.instructor}</p>
         </div>
         <button 
             onClick={onWriteReview} 
-            className="flex-shrink-0 px-4 py-2 bg-lehigh-gold text-lehigh-dark-brown font-semibold rounded-md hover:bg-yellow-500 transition-colors"
+            className="flex-shrink-0 px-4 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-opacity-90 transition-colors"
         >
             Write a Review
         </button>
@@ -44,22 +44,22 @@ const Evaluate: React.FC<EvaluateProps> = ({ courses, onAddReview }) => {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-lehigh-gold mb-6 text-center">Provide Feedback on a Course or Professor</h2>
+            <h2 className="text-3xl font-bold text-brand-text mb-6 text-center">Provide Feedback on a Course</h2>
             <div className="max-w-3xl mx-auto">
-                <p className="text-center text-lehigh-light-gold mb-4">Find a course you've taken to share your experience with other students.</p>
+                <p className="text-center text-brand-accent mb-4">Find a course you've taken to share your experience with other students.</p>
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by course ID, title, or instructor..."
-                    className="w-full bg-lehigh-dark-brown p-3 rounded-md border border-lehigh-light-gold focus:ring-lehigh-gold focus:border-lehigh-gold text-lg mb-6"
+                    className="w-full bg-brand-surface p-3 rounded-md border border-brand-secondary focus:ring-1 focus:ring-brand-primary focus:border-brand-primary text-lg mb-6"
                     aria-label="Search for a course or professor to review"
                 />
                 <div className="space-y-4">
                     {filteredCourses.map(course => (
                         <EvaluationCourseCard key={course.id} course={course} onWriteReview={() => setSelectedCourse(course)} />
                     ))}
-                    {searchTerm.length > 1 && filteredCourses.length === 0 && <p className="text-center text-lehigh-light-gold bg-lehigh-brown/30 p-4 rounded-lg">No matching courses found.</p>}
+                    {searchTerm.length > 1 && filteredCourses.length === 0 && <p className="text-center text-brand-accent bg-brand-secondary/50 p-4 rounded-lg">No matching courses found.</p>}
                 </div>
             </div>
             {selectedCourse && (
